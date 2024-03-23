@@ -21,7 +21,8 @@ public class RegisterCommand implements Command {
         String password = askForPassword();
         String firstName = askForField("first name");
         String lastName = askForField("last name");
-        String additionalInfo = role == 2 ? askForField("biography") : askForField("affiliation");
+        String additionalInfo = role == 2 ? askForField("biography") :
+                                role == 3 ? askForField("affiliation") : null;
         User newUser = UserFactory.createUser(role, username, firstName, lastName, password, additionalInfo);
         UserService.getInstance().register(newUser);
         // AuditService.getInstance().log("User registered: " + newUser);
@@ -46,11 +47,13 @@ public class RegisterCommand implements Command {
     private String askForPassword() {
         String password;
         String confirmPassword;
+        scanner.nextLine();
+
         do {
             System.out.println("Enter your password: ");
-            password = scanner.nextLine();
+            password = scanner.nextLine().trim();
             System.out.println("Confirm your password: ");
-            confirmPassword = scanner.nextLine();
+            confirmPassword = scanner.nextLine().trim();
         } while (!password.equals(confirmPassword));
 
         return password;

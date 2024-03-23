@@ -40,6 +40,6 @@ public class UserService {
     }
 
     public User getCurrentUser() {
-        return null;
+        return currentUser;
     }
 }
