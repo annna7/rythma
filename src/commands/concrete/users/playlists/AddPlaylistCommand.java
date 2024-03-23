@@ -5,6 +5,7 @@ import enums.AudioCollectionEnum;
 import factories.AudioCollectionFactory;
 import models.audio.collections.Playlist;
 import services.MusicService;
+import services.PlaylistService;
 
 import static utils.InputUtils.askForField;
 
@@ -16,6 +17,6 @@ public class AddPlaylistCommand implements Command {
 
         Playlist playlist = (Playlist) AudioCollectionFactory.createAudioCollection(AudioCollectionEnum.PLAYLIST, playlistName, playlistDescription);
 
-        MusicService.getInstance().addPlaylist(playlist);
+        PlaylistService.getInstance().addPlaylist(playlist);
     }
 }

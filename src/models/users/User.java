@@ -1,5 +1,8 @@
 package models.users;
 
+import models.audio.collections.Playlist;
+
+import java.util.List;
 import java.util.Objects;
 
 public class User {
@@ -9,6 +12,7 @@ public class User {
     protected final String firstName;
     protected final String lastName;
     protected final String password;
+    private final List<Playlist> playlists;
 
     public User(String username, String firstName, String lastName, String password) {
         this.username = username;
@@ -35,6 +39,21 @@ public class User {
 
     public String getPassword() { return password; }
 
+    public List<Playlist> getPlaylists() {
+        return playlists;
+    }
+
+    public void addPlaylist(Playlist playlist) {
+        playlists.add(playlist);
+    }
+
+    public void removePlaylist(Playlist playlist) {
+        if (!playlists.contains(playlist)) {
+            throw new IllegalArgumentException("Playlist not found");
+        }
+        playlists.remove(playlist);
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -42,6 +61,7 @@ public class User {
                 ", username='" + username + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", playlists=" + playlists +
                 '}';
     }
 

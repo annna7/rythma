@@ -11,6 +11,6 @@ public class UpdateAffiliationCommand implements Command {
     @Override
     public void execute() {
         String affiliation = askForField("new affiliation");
-        MusicService.getInstance().updateAffiliation(affiliation);
+        UserService.getInstance().updateHostAffiliation(affiliation);
     }
 }

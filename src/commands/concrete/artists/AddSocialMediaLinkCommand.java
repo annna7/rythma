@@ -2,6 +2,7 @@ package commands.concrete.artists;
 
 import commands.Command;
 import services.MusicService;
+import services.UserService;
 
 import static utils.InputUtils.askForField;
 
@@ -11,6 +12,6 @@ public class AddSocialMediaLinkCommand implements Command {
         String platform = askForField("social media platform");
         String link = askForField("profile link");
 
-        MusicService.getInstance().addSocialMediaLinkToArtist(platform, link);
+        UserService.getInstance().addSocialMediaLinkToArtist(platform, link);
     }
 }

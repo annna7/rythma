@@ -1,13 +1,19 @@
 package services;
 
 import models.audio.collections.Album;
+import models.audio.collections.Playlist;
+import models.audio.collections.Podcast;
+import models.audio.items.Episode;
 import models.audio.items.Song;
 import models.users.Artist;
 import models.users.Host;
+import models.users.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static utils.RoleValidator.validateArtist;
 
 public class MusicService {
     private static MusicService instance = null;
@@ -15,7 +21,7 @@ public class MusicService {
     private static final List<Album> albums = new ArrayList<>();
     private MusicService() {}
 
-    public static MusicService getInstance() {
+    public static synchronized MusicService getInstance() {
         if (instance == null) {
             instance = new MusicService();
         }
@@ -23,43 +29,23 @@ public class MusicService {
     }
 
     public Album getAlbum(int albumId) {
-        try {
-            return albums.stream().filter(a -> a.getId() == albumId).findFirst().get();
-        } catch (Exception e) {
-            return null;
-        }
+        return albums.stream().filter(a -> a.getId() == albumId).findFirst().get();
     }
 
     public Song getSong(int songId) {
-        try {
-            return allSongs.stream().filter(s -> s.getId() == songId).findFirst().get();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public void updateAffiliation(String affiliation) {
-        Host currentUser = (Host) UserService.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            throw new IllegalArgumentException("Current user is not a host");
-        }
-        currentUser.setAffiliation(affiliation);
+        return allSongs.stream().filter(s -> s.getId() == songId).findFirst().get();
     }
 
     public ArrayList<Album> getCurrentAlbums() {
-        Artist currentUser = (Artist) UserService.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            throw new IllegalArgumentException("Current user is not an artist");
-        }
-        return (ArrayList<Album>) currentUser.getAlbums();
+        User currentUser = UserService.getInstance().getCurrentUser();
+        validateArtist(currentUser);
+        return (ArrayList<Album>) ((Artist) currentUser).getAlbums();
     }
 
     public void addAlbum(Album album) {
-        Artist currentUser = (Artist) UserService.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            throw new IllegalArgumentException("Current user is not an artist");
-        }
-        currentUser.addAlbum(album);
+        User currentUser = UserService.getInstance().getCurrentUser();
+        validateArtist(currentUser);
+        ((Artist) currentUser).addAlbum(album);
         albums.add(album);
     }
 
@@ -72,31 +58,14 @@ public class MusicService {
         allSongs.add(song);
     }
 
-    public void addSocialMediaLinkToArtist(String platform, String link) {
-        Artist currentUser = (Artist) UserService.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            throw new IllegalArgumentException("Current user is not an artist");
-        }
-        currentUser.addSocialMediaLink(platform, link);
-    }
-
-    public void removeSocialMediaLinkFromArtist(String platform) {
-        Artist currentUser = (Artist) UserService.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            throw new IllegalArgumentException("Current user is not an artist");
-        }
-        currentUser.removeSocialMediaLink(platform);
-    }
 
     public void removeAlbum(int albumId) {
-        Artist currentUser = (Artist) UserService.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            throw new IllegalArgumentException("Current user is not an artist");
-        }
+        User currentUser = UserService.getInstance().getCurrentUser();
+        validateArtist(currentUser);
         Album album = getAlbum(albumId);
         if (album != null) {
             albums.remove(album);
-            currentUser.removeAlbum(album);
+            ((Artist) currentUser).removeAlbum(album);
         }
     }
 
@@ -117,4 +86,8 @@ public class MusicService {
         album.removeItem(song);
         allSongs.remove(song);
     }
+
+
+
+
 }

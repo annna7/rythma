@@ -5,6 +5,7 @@ import enums.PlayableItemEnum;
 import factories.PlayableItemFactory;
 import models.audio.items.Episode;
 import services.MusicService;
+import services.PodcastService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,6 +30,6 @@ public class AddEpisodeToPodcastCommand implements Command {
         Episode episode = (Episode) PlayableItemFactory.createPlayableItem(PlayableItemEnum.EPISODE, episodeName, episodeDuration,
                                                                            release, podcastId, args);
 
-        MusicService.getInstance().addEpisodeToPodcast(episode);
+        PodcastService.getInstance().addEpisodeToPodcast(episode, podcastId);
     }
 }

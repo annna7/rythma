@@ -39,6 +39,9 @@ public abstract class AudioCollection<T extends PlayableItem> {
     }
 
     public void removeItem(T item) {
+        if (!items.contains(item)) {
+            throw new IllegalArgumentException("Item not found");
+        }
         items.remove(item);
     }
 

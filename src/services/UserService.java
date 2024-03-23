@@ -1,6 +1,8 @@
 package services;
 
 import enums.UserRoleEnum;
+import models.users.Artist;
+import models.users.Host;
 import models.users.User;
 import java.util.HashMap;
 
@@ -56,6 +58,30 @@ public class UserService {
 
     public User getCurrentUser() {
         return currentUser;
+    }
+
+    public void updateHostAffiliation(String affiliation) {
+        Host currentUser = (Host) UserService.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            throw new IllegalArgumentException("Current user is not a host");
+        }
+        currentUser.setAffiliation(affiliation);
+    }
+
+    public void addSocialMediaLinkToArtist(String platform, String link) {
+        Artist currentUser = (Artist) UserService.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            throw new IllegalArgumentException("Current user is not an artist");
+        }
+        currentUser.addSocialMediaLink(platform, link);
+    }
+
+    public void removeSocialMediaLinkFromArtist(String platform) {
+        Artist currentUser = (Artist) UserService.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            throw new IllegalArgumentException("Current user is not an artist");
+        }
+        currentUser.removeSocialMediaLink(platform);
     }
 
     public UserRoleEnum getRole() {

@@ -10,10 +10,6 @@ public class RemoveSongFromAlbumCommand implements Command {
     public void execute() {
         int songId = Integer.parseInt(askForField("the song ID"));
 
-        try {
-            MusicService.getInstance().removeSongFromAlbum(songId);
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
+        MusicService.getInstance().removeSongFromAlbum(songId);
     }
 }
