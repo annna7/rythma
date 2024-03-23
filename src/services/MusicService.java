@@ -1,12 +1,8 @@
 package services;
 
 import models.audio.collections.Album;
-import models.audio.collections.Playlist;
-import models.audio.collections.Podcast;
-import models.audio.items.Episode;
 import models.audio.items.Song;
 import models.users.Artist;
-import models.users.Host;
 import models.users.User;
 
 import java.util.ArrayList;

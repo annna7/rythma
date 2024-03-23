@@ -4,7 +4,6 @@ import commands.Command;
 import enums.AudioCollectionEnum;
 import factories.AudioCollectionFactory;
 import models.audio.collections.Playlist;
-import services.MusicService;
 import services.PlaylistService;
 
 import static utils.InputUtils.askForField;

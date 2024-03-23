@@ -20,6 +20,7 @@ public class PlaylistService {
 
     public void addPlaylist(Playlist playlist) {
         User currentUser = UserService.getInstance().getCurrentUser();
+        playlists.add(playlist);
         currentUser.addPlaylist(playlist);
     }
 
@@ -41,6 +42,7 @@ public class PlaylistService {
         if (playlist == null) {
             throw new IllegalArgumentException("Playlist not found");
         }
+        playlists.remove(playlist);
         currentUser.removePlaylist(playlist);
     }
 

@@ -14,7 +14,6 @@ import static utils.InputUtils.askForPasswordConfirmation;
 import static utils.InputUtils.askForRole;
 
 public class RegisterCommand implements Command {
-    private static final Scanner scanner = new Scanner(System.in);
     @Override
     public void execute() {
         System.out.println("Fill in the following fields to register: ");

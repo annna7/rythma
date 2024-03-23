@@ -1,7 +1,6 @@
 package commands.concrete.artists;
 
 import commands.Command;
-import services.MusicService;
 import services.UserService;
 
 import static utils.InputUtils.askForField;

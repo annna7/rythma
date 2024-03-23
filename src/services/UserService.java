@@ -22,16 +22,20 @@ public class UserService {
     }
 
     private boolean setRole() {
-        if (currentUser instanceof models.users.Artist) {
-            role = UserRoleEnum.ARTIST;
-            return true;
-        } else if (currentUser instanceof models.users.Host) {
-            role = UserRoleEnum.HOST;
-            return true;
-        } else {
+        if (currentUser == null) {
             role = UserRoleEnum.REGULAR;
-            return true;
+            return false;
+        } else {
+            if (currentUser instanceof models.users.Artist) {
+                role = UserRoleEnum.ARTIST;
+            } else if (currentUser instanceof models.users.Host) {
+                role = UserRoleEnum.HOST;
+            } else {
+                role = UserRoleEnum.REGULAR;
+            }
         }
+        return true;
+
     }
 
     public boolean login(String username, String password) {

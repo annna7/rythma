@@ -17,9 +17,6 @@ import java.util.AbstractMap.SimpleEntry;
 
 public class CliService {
     private final UserService userService;
-    private final MusicService musicService;
-    private final PlaylistService playlistService;
-    private final MusicPlayerService musicPlayerService;
     private static final Map<Integer, SimpleEntry<Command, String>> loggedInCommands = new HashMap<>();
     private static final Map<Integer, SimpleEntry<Command, String>> loggedOutCommands = new HashMap<>();
     private static final Map<Integer, SimpleEntry<Command, String>> artistCommands = new HashMap<>();
@@ -58,12 +55,9 @@ public class CliService {
     private static CliService instance = null;
     private CliService() {
         userService = UserService.getInstance();
-        musicService = MusicService.getInstance();
-        playlistService = PlaylistService.getInstance();
-        musicPlayerService = MusicPlayerService.getInstance();
     }
 
-    public static CliService getInstance() {
+    public static synchronized CliService getInstance() {
         if (instance == null) {
             instance = new CliService();
         }

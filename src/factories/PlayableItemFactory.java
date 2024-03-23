@@ -6,8 +6,6 @@ import models.audio.items.PlayableItem;
 import models.audio.items.Song;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
 
 public class PlayableItemFactory {
     public static PlayableItem createPlayableItem(PlayableItemEnum type, String title, int length, LocalDate release,

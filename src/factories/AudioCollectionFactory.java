@@ -10,7 +10,6 @@ public class AudioCollectionFactory {
             case PLAYLIST -> new Playlist(name, additionalInfo);
             case ALBUM -> new Album(name, additionalInfo);
             case PODCAST -> new Podcast(name, additionalInfo);
-            default -> throw new IllegalArgumentException("Invalid audio collection type");
         };
     }
 }
