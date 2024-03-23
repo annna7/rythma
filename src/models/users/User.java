@@ -1,12 +1,13 @@
 package models.users;
 
 import models.audio.collections.Playlist;
+import observable.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class User {
+public class User implements Observer {
     private static int idCounter = 0;
     private final int id = idCounter++;
     protected final String username;
@@ -14,6 +15,7 @@ public class User {
     protected final String lastName;
     protected final String password;
     private final List<Playlist> playlists = new ArrayList<>();
+    private final List<String> notifications = new ArrayList<>();
 
     public User(String username, String firstName, String lastName, String password) {
         this.username = username;
@@ -81,5 +83,16 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public void update(String message) {
+        notifications.add(message);
+    }
+
+    public void getNotifications() {
+        for (String notification : notifications) {
+            System.out.println(notification);
+        }
     }
 }

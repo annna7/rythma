@@ -51,6 +51,18 @@ public class UserService {
         setCurrentUser(null);
     }
 
+    public User getUser(int userId) {
+        return users.stream().filter(u -> u.getId() == userId).findFirst().orElseThrow(() -> new NotFoundException("User"));
+    }
+
+    public Artist getArtist(int artistId) {
+        return RoleValidator.validateRole(getUser(artistId), UserRoleEnum.ARTIST, Artist.class);
+    }
+
+    public Host getHost(int hostId) {
+        return RoleValidator.validateRole(getUser(hostId), UserRoleEnum.HOST, Host.class);
+    }
+
     private User getUser(String username) {
         return users.stream().filter(u -> u.getUsername().equals(username)).findFirst().orElseThrow(() -> new NotFoundException("User"));
     }

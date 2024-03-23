@@ -1,6 +1,8 @@
 package models.users;
 
 import models.audio.collections.Album;
+import observable.Observable;
+import observable.Observer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Artist extends User {
+    private final Observable observable = new Observable();
     private final String biography;
     private final List<Album> albums = new ArrayList<>();
     private final Map<String, String> socialMediaLinks = new HashMap<>();
@@ -19,6 +22,7 @@ public class Artist extends User {
 
     public void addAlbum(Album album) {
         albums.add(album);
+        notifyObservers("New album added by " + this.getUsername() + ": " + album.getName());
     }
 
     public void removeAlbum(Album album) {
@@ -56,5 +60,17 @@ public class Artist extends User {
                 ", biography='" + biography + '\'' +
                 ", socialMediaLinks=" + socialMediaLinks +
                 '}';
+    }
+
+    public void attach(Observer observer) {
+        observable.attach(observer);
+    }
+
+    public void detach(Observer observer) {
+        observable.detach(observer);
+    }
+
+    public void notifyObservers(String message) {
+        observable.notifyObservers(message);
     }
 }
