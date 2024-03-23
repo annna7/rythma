@@ -6,22 +6,25 @@ import models.audio.items.PlayableItem;
 import models.audio.items.Song;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 
 public class PlayableItemFactory {
-    public static PlayableItem createPlayableItem(PlayableItemEnum type, String title, int length, LocalDate release, int albumOrPodcastId, List<String> additionalInfo) {
+    public static PlayableItem createPlayableItem(PlayableItemEnum type, String title, int length, LocalDate release,
+                                                  int collectionId, String... additionalInfo) {
         return switch (type) {
             case SONG -> {
-                Song song = new Song(title, length, albumOrPodcastId, release);
+                Song song = new Song(title, length, collectionId, release);
                 for (String info : additionalInfo) {
                     song.addGenre(info);
                 }
                 yield song;
             }
             case EPISODE -> {
-                Episode episode = new Episode(title, length, albumOrPodcastId, release);
-                for (String info : additionalInfo) {
-                    episode.addGuest(info);
+                Episode episode = new Episode(title, length, release, collectionId, Integer.parseInt(additionalInfo[0]),
+                                              additionalInfo[1]);
+                for (int i = 2; i < additionalInfo.length; i++) {
+                    episode.addGuest(additionalInfo[i]);
                 }
                 yield episode;
             }

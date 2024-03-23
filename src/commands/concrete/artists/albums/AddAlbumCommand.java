@@ -1,4 +1,4 @@
-package commands.concrete.artists;
+package commands.concrete.artists.albums;
 
 import commands.Command;
 import enums.AudioCollectionEnum;

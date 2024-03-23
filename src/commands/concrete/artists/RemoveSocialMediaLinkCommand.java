@@ -7,7 +7,7 @@ import static utils.InputUtils.askForField;
 public class RemoveSocialMediaLinkCommand implements Command {
     @Override
     public void execute() {
-        String platform = askForField("the social media platform");
+        String platform = askForField("social media platform");
         MusicService.getInstance().removeSocialMediaLinkFromArtist(platform);
     }
 }

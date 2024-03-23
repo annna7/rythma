@@ -3,6 +3,7 @@ package services;
 import models.audio.collections.Album;
 import models.audio.items.Song;
 import models.users.Artist;
+import models.users.Host;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +36,14 @@ public class MusicService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public void updateAffiliation(String affiliation) {
+        Host currentUser = (Host) UserService.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            throw new IllegalArgumentException("Current user is not a host");
+        }
+        currentUser.setAffiliation(affiliation);
     }
 
     public ArrayList<Album> getCurrentAlbums() {

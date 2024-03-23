@@ -54,6 +54,7 @@ public class Artist extends User {
         return "Artist{" +
                 super.toString() +
                 ", biography='" + biography + '\'' +
+                ", socialMediaLinks=" + socialMediaLinks +
                 '}';
     }
 }

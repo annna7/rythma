@@ -2,7 +2,11 @@ package services;
 
 import commands.Command;
 import commands.concrete.artists.*;
+import commands.concrete.artists.albums.*;
+import commands.concrete.hosts.UpdateAffiliationCommand;
+import commands.concrete.hosts.podcasts.*;
 import commands.concrete.users.*;
+import commands.concrete.users.playlists.*;
 import enums.UserRoleEnum;
 
 import java.util.HashMap;
@@ -23,14 +27,28 @@ public class CliService {
 
     static {
         loggedInCommands.put(1, new SimpleEntry<>(new ShowUserDetailsCommand(), "Show User Details"));
+        loggedInCommands.put(2, new SimpleEntry<>(new ViewPlaylistsCommand(), "View All Playlists"));
+        loggedInCommands.put(3, new SimpleEntry<>(new AddPlaylistCommand(), "Create Playlist"));
+        loggedInCommands.put(4, new SimpleEntry<>(new AddSongToPlaylistCommand(), "Add Song to Playlist"));
+        loggedInCommands.put(5, new SimpleEntry<>(new RemoveSongFromPlaylistCommand(), "Remove Song from Playlist"));
+        loggedInCommands.put(6, new SimpleEntry<>(new RemovePlaylistCommand(), "Remove Playlist"));
 
-        artistCommands.put(1, new SimpleEntry<>(new ViewAlbumsCommand(), "View All Your Albums"));
-        artistCommands.put(2, new SimpleEntry<>(new AddAlbumCommand(), "Create Album"));
-        artistCommands.put(3, new SimpleEntry<>(new AddSongToAlbumCommand(), "Add Song to Album"));
-        artistCommands.put(4, new SimpleEntry<>(new RemoveSongFromAlbumCommand(), "Remove Song from Album"));
-        artistCommands.put(5, new SimpleEntry<>(new RemoveAlbumCommand(), "Remove Album"));
-        artistCommands.put(6, new SimpleEntry<>(new AddSocialMediaLinkCommand(), "Add Social Media Link"));
-        artistCommands.put(7, new SimpleEntry<>(new RemoveSocialMediaLinkCommand(), "Remove Social Media Link"));
+
+        artistCommands.put(2, new SimpleEntry<>(new ViewAlbumsCommand(), "View All Your Albums"));
+        artistCommands.put(3, new SimpleEntry<>(new AddAlbumCommand(), "Create Album"));
+        artistCommands.put(4, new SimpleEntry<>(new AddSongToAlbumCommand(), "Add Song to Album"));
+        artistCommands.put(5, new SimpleEntry<>(new RemoveSongFromAlbumCommand(), "Remove Song from Album"));
+        artistCommands.put(6, new SimpleEntry<>(new RemoveAlbumCommand(), "Remove Album"));
+        artistCommands.put(7, new SimpleEntry<>(new AddSocialMediaLinkCommand(), "Add Social Media Link"));
+        artistCommands.put(8, new SimpleEntry<>(new RemoveSocialMediaLinkCommand(), "Remove Social Media Link"));
+
+        hostCommands.put(2, new SimpleEntry<>(new ViewPodcastsCommand(), "View All Podcasts"));
+        hostCommands.put(3, new SimpleEntry<>(new AddPodcastCommand(), "Create Podcast"));
+        hostCommands.put(4, new SimpleEntry<>(new AddEpisodeToPodcastCommand(), "Add Episode to Podcast"));
+        hostCommands.put(5, new SimpleEntry<>(new RemoveEpisodeFromPodcastCommand(), "Remove Episode from Podcast"));
+        hostCommands.put(6, new SimpleEntry<>(new RemovePodcastCommand(), "Remove Podcast"));
+        hostCommands.put(7, new SimpleEntry<>(new UpdateAffiliationCommand(), "Update Affiliation"));
+
 
         loggedOutCommands.put(1, new SimpleEntry<>(new LoginCommand(), "Login"));
         loggedOutCommands.put(2, new SimpleEntry<>(new RegisterCommand(), "Register"));

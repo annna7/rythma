@@ -38,6 +38,16 @@ public class InputUtils {
         return genres;
     }
 
+    public static ArrayList< String > askForEpisodeGuests() {
+        ArrayList< String  > guests = new ArrayList<>();
+        System.out.println("Enter the guests of the episode or -1 to finish");
+        String guest;
+        while (!(guest = askForField("guest")).equals("-1")) {
+            guests.add(guest);
+        }
+        return guests;
+    }
+
 
     public static int askForRole() {
         while (true) {

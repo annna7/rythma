@@ -41,4 +41,13 @@ public abstract class AudioCollection<T extends PlayableItem> {
     public void removeItem(T item) {
         items.remove(item);
     }
+
+    @Override
+    public String toString() {
+        return "AudioCollection{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", items=" + items +
+                '}';
+    }
 }

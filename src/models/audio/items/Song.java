@@ -8,7 +8,7 @@ public class Song extends PlayableItem {
     private final int albumId;
     private final List<String> genres = new ArrayList<>();
     public Song(String title, int length, int albumId, LocalDate release) {
-        super(title, length, release);
+        super(title, length, release, albumId);
         this.albumId = albumId;
     }
 
@@ -26,7 +26,8 @@ public class Song extends PlayableItem {
 
     @Override
     public String toString() {
-        return "Song{" + super.toString() +
+        return "Song{" +
+                super.toString() +
                 "albumId=" + albumId +
                 ", genres=" + genres +
                 '}';

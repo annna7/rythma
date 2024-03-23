@@ -13,7 +13,6 @@ Rythma is a backend service (written in Java) that simulates a music streaming s
   * Playlist
   * Album
   * Podcast
-* Music Player
 * Notification
 
 ## Features
@@ -27,18 +26,15 @@ Rythma is a backend service (written in Java) that simulates a music streaming s
   * Add/Remove Songs from Playlist
   * Follow or unfollow Playlists/Artists/Podcast Hosts
   * Search for Songs/Playlists/Albums/Podcasts/Artists/Podcast Hosts
-  * Play/Pause/Skip Songs
-  * Forward/Backward 10 seconds
-  * Play Next/Previous Item in Queue (if any)
 * _**As an Artist**_ (+ all User features)
-  * Create Albums
-  * Upload Songs to Albums
+  * Create/Delete Albums
+  * Add/Remove Songs to Albums
   * Update Own Songs Details
   * Add/Remove Songs from Albums
   * Update description & social media links
 * _**As a Podcast Host**_ (+ all User features)
-  * Create Podcasts
-  * Upload Episodes to Podcasts
+  * Create/Delete Podcasts
+  * Add/Remove Episodes to Podcasts
   * Add/Remove Episodes from Podcasts
   * Update Own Episodes Details
   * Update affiliation
@@ -46,7 +42,7 @@ Rythma is a backend service (written in Java) that simulates a music streaming s
 ## Design Patterns
 * **Singleton** - for services like `UserService`, `MusicService` etc.
 * **Observer** - for `Notification` handling
-* **Strategy** - for different Search strategies
+* **Strategy** - for different `Search` strategies
 * **Factory** - for creating `Users` etc.
 * **Command** 
   - wraps every request from the CLI

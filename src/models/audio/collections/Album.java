@@ -15,15 +15,9 @@ public class Album extends AudioCollection<Song> {
 
     @Override
     public String toString() {
-        String albumInfo = "Album{" +
-                "id=" + getId() + ", " +
-                "name='" + getName() + '\'' +
-                ", label='" + label + '\'' +
+        return "Album{" +
+                super.toString() +
+                "label='" + label + '\'' +
                 '}';
-        StringBuilder songsInfo = new StringBuilder();
-        for (Song song : getItems()) {
-            songsInfo.append(song.toString()).append("\n");
-        }
-        return albumInfo + "\n" + songsInfo;
     }
 }
