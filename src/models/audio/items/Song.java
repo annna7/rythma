@@ -24,7 +24,11 @@ public class Song extends PlayableItem {
         return albumId;
     }
 
+    @Override
     public String toString() {
-        return title + " by " + albumId;
+        return "Song{" + super.toString() +
+                "albumId=" + albumId +
+                ", genres=" + genres +
+                '}';
     }
 }

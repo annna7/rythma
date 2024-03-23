@@ -1,4 +1,4 @@
-package commands.concrete.albums;
+package commands.concrete.artists;
 
 import commands.Command;
 import enums.AudioCollectionEnum;
@@ -16,6 +16,6 @@ public class AddAlbumCommand implements Command {
 
         Album album = (Album) AudioCollectionFactory.createAudioCollection(AudioCollectionEnum.ALBUM, name, label);
         MusicService.getInstance().addAlbum(album);
-        // TODO: Audit & database
+        System.out.println("Album added successfully.");
     }
 }

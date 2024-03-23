@@ -37,4 +37,36 @@ public class InputUtils {
         }
         return genres;
     }
+
+
+    public static int askForRole() {
+        while (true) {
+            System.out.println("Enter your role: ");
+            System.out.println("1. Regular User");
+            System.out.println("2. Artist");
+            System.out.println("3. Podcast Host");
+
+            int role = scanner.nextInt();
+            scanner.nextLine();
+
+            if (role >= 1 && role <= 3) {
+                return role;
+            }
+        }
+    }
+
+    public static String askForPasswordConfirmation() {
+        String password;
+        String confirmPassword;
+        scanner.nextLine();
+
+        do {
+            System.out.println("Enter your password: ");
+            password = scanner.nextLine().trim();
+            System.out.println("Confirm your password: ");
+            confirmPassword = scanner.nextLine().trim();
+        } while (!password.equals(confirmPassword));
+
+        return password;
+    }
 }

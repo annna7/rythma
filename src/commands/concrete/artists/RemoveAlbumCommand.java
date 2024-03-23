@@ -1,4 +1,4 @@
-package commands.concrete.albums;
+package commands.concrete.artists;
 
 import commands.Command;
 import services.MusicService;

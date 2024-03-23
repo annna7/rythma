@@ -1,9 +1,8 @@
 package services;
 
 import commands.Command;
-import commands.concrete.albums.*;
+import commands.concrete.artists.*;
 import commands.concrete.users.*;
-import commands.concrete.playlists.*;
 import enums.UserRoleEnum;
 
 import java.util.HashMap;
@@ -23,13 +22,15 @@ public class CliService {
     private static final Map<Integer, SimpleEntry<Command, String>> hostCommands = new HashMap<>();
 
     static {
-        loggedInCommands.put(1, new SimpleEntry<>(new CreatePlaylistCommand(), "Create Playlist"));
+        loggedInCommands.put(1, new SimpleEntry<>(new ShowUserDetailsCommand(), "Show User Details"));
 
         artistCommands.put(1, new SimpleEntry<>(new ViewAlbumsCommand(), "View All Your Albums"));
         artistCommands.put(2, new SimpleEntry<>(new AddAlbumCommand(), "Create Album"));
         artistCommands.put(3, new SimpleEntry<>(new AddSongToAlbumCommand(), "Add Song to Album"));
         artistCommands.put(4, new SimpleEntry<>(new RemoveSongFromAlbumCommand(), "Remove Song from Album"));
         artistCommands.put(5, new SimpleEntry<>(new RemoveAlbumCommand(), "Remove Album"));
+        artistCommands.put(6, new SimpleEntry<>(new AddSocialMediaLinkCommand(), "Add Social Media Link"));
+        artistCommands.put(7, new SimpleEntry<>(new RemoveSocialMediaLinkCommand(), "Remove Social Media Link"));
 
         loggedOutCommands.put(1, new SimpleEntry<>(new LoginCommand(), "Login"));
         loggedOutCommands.put(2, new SimpleEntry<>(new RegisterCommand(), "Register"));
@@ -53,7 +54,7 @@ public class CliService {
 
     public void showMainMenu() {
         boolean isLoggedIn = userService.getCurrentUser() != null;
-        Map<Integer, SimpleEntry<Command, String>> currentCommands = isLoggedIn ? loggedOutCommands : loggedInCommands;
+        Map<Integer, SimpleEntry<Command, String>> currentCommands = isLoggedIn ? loggedInCommands : loggedOutCommands;
         if (userService.getRole() == UserRoleEnum.ARTIST) {
             currentCommands.putAll(artistCommands);
         } else if (userService.getRole() == UserRoleEnum.HOST) {
