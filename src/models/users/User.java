@@ -8,11 +8,13 @@ public class User {
     protected final String username;
     protected final String firstName;
     protected final String lastName;
+    protected final String password;
 
-    public User(String username, String firstName, String lastName) {
+    public User(String username, String firstName, String lastName, String password) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.password = password;
     }
 
     public String getUsername() {
@@ -26,6 +28,8 @@ public class User {
     public String getLastName() {
         return lastName;
     }
+
+    public String getPassword() { return password; }
 
     @Override
     public String toString() {
