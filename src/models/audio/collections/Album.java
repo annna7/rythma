@@ -12,4 +12,6 @@ public class Album extends AudioCollection<Song> {
     public String getLabel() {
         return label;
     }
+
+
 }

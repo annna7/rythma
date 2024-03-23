@@ -1,10 +1,10 @@
 package services;
 
 import commands.Command;
-import commands.concrete.CreatePlaylistCommand;
-import commands.concrete.ExitCommand;
-import commands.concrete.LoginCommand;
-import commands.concrete.RegisterCommand;
+import commands.concrete.albums.*;
+import commands.concrete.users.*;
+import commands.concrete.playlists.*;
+import enums.UserRoleEnum;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,10 +19,17 @@ public class CliService {
     private final MusicPlayerService musicPlayerService;
     private static final Map<Integer, SimpleEntry<Command, String>> loggedInCommands = new HashMap<>();
     private static final Map<Integer, SimpleEntry<Command, String>> loggedOutCommands = new HashMap<>();
+    private static final Map<Integer, SimpleEntry<Command, String>> artistCommands = new HashMap<>();
+    private static final Map<Integer, SimpleEntry<Command, String>> hostCommands = new HashMap<>();
 
     static {
         loggedInCommands.put(1, new SimpleEntry<>(new CreatePlaylistCommand(), "Create Playlist"));
-        loggedInCommands.put(2, new SimpleEntry<>(new ExitCommand(), "Exit"));
+
+        artistCommands.put(1, new SimpleEntry<>(new ViewAlbumsCommand(), "View All Your Albums"));
+        artistCommands.put(2, new SimpleEntry<>(new AddAlbumCommand(), "Create Album"));
+        artistCommands.put(3, new SimpleEntry<>(new AddSongToAlbumCommand(), "Add Song to Album"));
+        artistCommands.put(4, new SimpleEntry<>(new RemoveSongFromAlbumCommand(), "Remove Song from Album"));
+        artistCommands.put(5, new SimpleEntry<>(new RemoveAlbumCommand(), "Remove Album"));
 
         loggedOutCommands.put(1, new SimpleEntry<>(new LoginCommand(), "Login"));
         loggedOutCommands.put(2, new SimpleEntry<>(new RegisterCommand(), "Register"));
@@ -45,9 +52,20 @@ public class CliService {
     }
 
     public void showMainMenu() {
-        Map<Integer, SimpleEntry<Command, String>> currentCommands = userService.getCurrentUser() == null ? loggedOutCommands : loggedInCommands;
+        boolean isLoggedIn = userService.getCurrentUser() != null;
+        Map<Integer, SimpleEntry<Command, String>> currentCommands = isLoggedIn ? loggedOutCommands : loggedInCommands;
+        if (userService.getRole() == UserRoleEnum.ARTIST) {
+            currentCommands.putAll(artistCommands);
+        } else if (userService.getRole() == UserRoleEnum.HOST) {
+            currentCommands.putAll(hostCommands);
+        }
 
-        System.out.println("Welcome to Rythma, your Music Streaming Application!");
+        if (isLoggedIn) {
+            System.out.println("Welcome, " + userService.getCurrentUser().getUsername() + "!");
+        } else {
+            System.out.println("Welcome to Rythma, your Music Streaming Application!");
+        }
+
         System.out.println("Select an option:");
         currentCommands.forEach((key, value) -> System.out.println(key + ". " + value.getValue()));
     }

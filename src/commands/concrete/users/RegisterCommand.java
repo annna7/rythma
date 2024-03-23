@@ -1,9 +1,7 @@
-package commands.concrete;
+package commands.concrete.users;
 
 import commands.Command;
 import factories.UserFactory;
-import models.users.Artist;
-import models.users.Host;
 import models.users.User;
 import services.UserService;
 

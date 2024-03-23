@@ -1,4 +1,4 @@
-package commands.concrete;
+package commands.concrete.playlists;
 
 import commands.Command;
 

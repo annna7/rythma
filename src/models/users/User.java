@@ -3,8 +3,8 @@ package models.users;
 import java.util.Objects;
 
 public class User {
-    private static long idCounter = 0;
-    private final long id = idCounter++;
+    private static int idCounter = 0;
+    private final int id = idCounter++;
     protected final String username;
     protected final String firstName;
     protected final String lastName;
@@ -15,6 +15,10 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getUsername() {

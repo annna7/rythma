@@ -1,4 +1,4 @@
-package commands.concrete;
+package commands.concrete.users;
 
 import commands.Command;
 import services.UserService;

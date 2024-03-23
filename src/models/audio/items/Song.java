@@ -7,7 +7,6 @@ import java.util.List;
 public class Song extends PlayableItem {
     private final int albumId;
     private final List<String> genres = new ArrayList<>();
-    private String lyrics;
     public Song(String title, int length, int albumId, LocalDate release) {
         super(title, length, release);
         this.albumId = albumId;
@@ -15,14 +14,6 @@ public class Song extends PlayableItem {
 
     public void addGenre(String genre) {
         genres.add(genre);
-    }
-
-    public void setLyrics(String lyrics) {
-        this.lyrics = lyrics;
-    }
-
-    public String getLyrics() {
-        return lyrics;
     }
 
     public List<String> getGenres() {
