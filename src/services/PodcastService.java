@@ -1,13 +1,12 @@
 package services;
 
+import exceptions.NotFoundException;
 import models.audio.collections.Podcast;
 import models.audio.items.Episode;
 import models.users.Host;
-import models.users.User;
 
 import java.util.ArrayList;
-
-import static utils.RoleValidator.validateHost;
+import java.util.List;
 
 public class PodcastService {
     private static PodcastService instance = null;
@@ -25,49 +24,41 @@ public class PodcastService {
 
     public void addEpisodeToPodcast(Episode episode, int podcastId) {
         Podcast podcast = getPodcast(podcastId);
-        if (podcast == null) {
-            throw new IllegalArgumentException("Podcast not found");
-        }
         podcast.addItem(episode);
     }
 
     private Podcast getPodcast(int podcastId) {
-        return podcasts.stream().filter(p -> p.getId() == podcastId).findFirst().orElse(null);
+        return podcasts.stream().filter(p -> p.getId() == podcastId).findFirst().orElseThrow(() -> new NotFoundException("Podcast"));
     }
 
-    public ArrayList<Podcast> getPodcastsForCurrentUser() {
-        User currentUser = UserService.getInstance().getCurrentUser();
-        validateHost(currentUser);
-        return (ArrayList<Podcast>) ((Host) currentUser).getPodcasts();
+    private Episode getEpisode(int episodeId) {
+        return podcasts.stream().flatMap(p -> p.getItems().stream()).filter(e -> e.getId() == episodeId).findFirst().orElseThrow(() -> new NotFoundException("Episode"));
+    }
+
+    private Episode getEpisode(int podcastId, int episodeId) {
+        return getPodcast(podcastId).getItems().stream().filter(e -> e.getId() == episodeId).findFirst().orElseThrow(() -> new NotFoundException("Episode"));
+    }
+    public List<Podcast> getPodcastsForCurrentUser() {
+        Host host = UserService.getInstance().getCurrentHost();
+        return host.getPodcasts();
     }
 
     public void addPodcast(Podcast podcast) {
+        Host host = UserService.getInstance().getCurrentHost();
+        host.addPodcast(podcast);
         podcasts.add(podcast);
-        User currentUser = UserService.getInstance().getCurrentUser();
-        validateHost(currentUser);
-        ((Host) currentUser).addPodcast(podcast);
     }
 
     public void removeEpisodeFromPodcast(int podcastId, int episodeId) {
         Podcast podcast = getPodcast(podcastId);
-        if (podcast == null) {
-            throw new IllegalArgumentException("Podcast not found");
-        }
-        Episode episode = podcast.getItems().stream().filter(e -> e.getId() == episodeId).findFirst().orElse(null);
-        if (episode == null) {
-            throw new IllegalArgumentException("Episode not found");
-        }
+        Episode episode = getEpisode(podcastId, episodeId);
         podcast.removeItem(episode);
     }
 
     public void removePodcast(int podcastId) {
+        Host host = UserService.getInstance().getCurrentHost();
         Podcast podcast = getPodcast(podcastId);
-        if (podcast == null) {
-            throw new IllegalArgumentException("Podcast not found");
-        }
+        host.removePodcast(podcast);
         podcasts.remove(podcast);
-        User currentUser = UserService.getInstance().getCurrentUser();
-        validateHost(currentUser);
-        ((Host) currentUser).removePodcast(podcast);
     }
 }

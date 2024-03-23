@@ -4,10 +4,13 @@ import commands.Command;
 import enums.PlayableItemEnum;
 import factories.PlayableItemFactory;
 import models.audio.items.Song;
+import models.users.Artist;
+import models.users.User;
 import services.MusicService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 import static utils.InputUtils.*;
 
@@ -25,5 +28,20 @@ public class AddSongToAlbumCommand implements Command {
                                                                   genres.toArray(new String[0]));
 
         MusicService.getInstance().addSongToAlbum(song, albumId);
+    }
+
+    @Override
+    public Predicate<User> getVisibilityRule() {
+        return user -> user instanceof Artist;
+    }
+
+    @Override
+    public String getCommandName() {
+        return "Add song to album";
+    }
+
+    @Override
+    public String getCommandDescription() {
+        return "Create a new song and add it to an album, by providing the song title, length, album ID, release date, and genres";
     }
 }

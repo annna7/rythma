@@ -1,15 +1,12 @@
 package services;
 
+import exceptions.NotFoundException;
 import models.audio.collections.Album;
 import models.audio.items.Song;
 import models.users.Artist;
-import models.users.User;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import static utils.RoleValidator.validateArtist;
 
 public class MusicService {
     private static MusicService instance = null;
@@ -25,23 +22,20 @@ public class MusicService {
     }
 
     public Album getAlbum(int albumId) {
-        return albums.stream().filter(a -> a.getId() == albumId).findFirst().get();
+        return albums.stream().filter(a -> a.getId() == albumId).findFirst().orElseThrow(() -> new NotFoundException("Album"));
     }
 
     public Song getSong(int songId) {
-        return allSongs.stream().filter(s -> s.getId() == songId).findFirst().get();
+        return allSongs.stream().filter(s -> s.getId() == songId).findFirst().orElseThrow(() -> new NotFoundException("Song"));
     }
 
-    public ArrayList<Album> getCurrentAlbums() {
-        User currentUser = UserService.getInstance().getCurrentUser();
-        validateArtist(currentUser);
-        return (ArrayList<Album>) ((Artist) currentUser).getAlbums();
+    public List<Album> getCurrentAlbums() {
+        return UserService.getInstance().getCurrentArtist().getAlbums();
     }
 
     public void addAlbum(Album album) {
-        User currentUser = UserService.getInstance().getCurrentUser();
-        validateArtist(currentUser);
-        ((Artist) currentUser).addAlbum(album);
+        Artist artist = UserService.getInstance().getCurrentArtist();
+        artist.addAlbum(album);
         albums.add(album);
     }
 
@@ -56,24 +50,18 @@ public class MusicService {
 
 
     public void removeAlbum(int albumId) {
-        User currentUser = UserService.getInstance().getCurrentUser();
-        validateArtist(currentUser);
         Album album = getAlbum(albumId);
-        if (album != null) {
-            albums.remove(album);
-            ((Artist) currentUser).removeAlbum(album);
+        Artist artist = UserService.getInstance().getCurrentArtist();
+        if (album.getOwnerId() != artist.getId()) {
+            throw new IllegalArgumentException("You can't remove an album you don't own");
         }
+        artist.removeAlbum(album);
+        albums.remove(album);
     }
 
     public void removeSongFromAlbum(int songId) {
         Song song = getSong(songId);
-        if (song == null) {
-            throw new IllegalArgumentException("Song not found");
-        }
         Album album = getAlbum(song.getAlbumId());
-        if (album == null) {
-            throw new IllegalArgumentException("Album not found");
-        }
 
         if (album.getOwnerId() != UserService.getInstance().getCurrentUser().getId()) {
             throw new IllegalArgumentException("You can't remove a song from an album you don't own");

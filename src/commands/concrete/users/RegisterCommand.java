@@ -6,7 +6,8 @@ import factories.UserFactory;
 import models.users.User;
 import services.UserService;
 
-import java.util.Scanner;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 import static enums.UserRoleEnum.*;
 import static utils.InputUtils.askForField;
@@ -31,5 +32,20 @@ public class RegisterCommand implements Command {
         UserService.getInstance().register(newUser);
         // AuditService.getInstance().log("User registered: " + newUser);
         // DatabaseService.getInstance().saveUser(newUser);
+    }
+
+    @Override
+    public Predicate<User> getVisibilityRule() {
+        return Objects::isNull;
+    }
+
+    @Override
+    public String getCommandName() {
+        return "Register";
+    }
+
+    @Override
+    public String getCommandDescription() {
+        return "Register a new user; you can choose between 3 roles: regular user, artist (can create albums and songs), and podcast host (can create podcasts and post episodes)";
     }
 }

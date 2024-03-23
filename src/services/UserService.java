@@ -1,16 +1,19 @@
 package services;
 
 import enums.UserRoleEnum;
+import exceptions.NotFoundException;
 import models.users.Artist;
 import models.users.Host;
 import models.users.User;
-import java.util.HashMap;
+import utils.RoleValidator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserService {
-    private final HashMap<String, User> usersByUsername = new HashMap<>();
     private User currentUser = null;
-    private UserRoleEnum role = null;
     private static UserService instance = null;
+    private final static List<User> users = new ArrayList<>();
 
     private UserService() {}
 
@@ -21,74 +24,66 @@ public class UserService {
         return instance;
     }
 
-    private boolean setRole() {
-        if (currentUser == null) {
-            role = UserRoleEnum.REGULAR;
-            return false;
-        } else {
-            if (currentUser instanceof models.users.Artist) {
-                role = UserRoleEnum.ARTIST;
-            } else if (currentUser instanceof models.users.Host) {
-                role = UserRoleEnum.HOST;
-            } else {
-                role = UserRoleEnum.REGULAR;
-            }
-        }
-        return true;
-
+    public boolean isLoggedIn() {
+        return currentUser != null;
     }
 
     public boolean login(String username, String password) {
-        if (usersByUsername.containsKey(username)) {
-            User user = usersByUsername.get(username);
-            if (user.getPassword().equals(password)) {
-                currentUser = user;
-                setRole();
-                return true;
-            }
+        User user = getUser(username);
+        if (user.getPassword().equals(password)) {
+            setCurrentUser(user);
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     public void register(User user) {
-        usersByUsername.put(user.getUsername(), user);
+        users.add(user);
+        setCurrentUser(user);
+    }
+
+    private void setCurrentUser(User user) {
         currentUser = user;
-        setRole();
     }
 
     public void logout() {
-        currentUser = null;
+        setCurrentUser(null);
+    }
+
+    private User getUser(String username) {
+        return users.stream().filter(u -> u.getUsername().equals(username)).findFirst().orElseThrow(() -> new NotFoundException("User"));
     }
 
     public User getCurrentUser() {
-        return currentUser;
+        return getCurrentUser(false);
+    }
+
+    public User getCurrentUser(boolean allowNull) {
+        if (allowNull) {
+            return currentUser;
+        } else {
+            return RoleValidator.validateRole(currentUser, UserRoleEnum.REGULAR, User.class);
+        }
+    }
+
+    public Artist getCurrentArtist() {
+        return RoleValidator.validateRole(currentUser, UserRoleEnum.ARTIST, Artist.class);
+    }
+
+    public Host getCurrentHost() {
+        return RoleValidator.validateRole(currentUser, UserRoleEnum.HOST, Host.class);
     }
 
     public void updateHostAffiliation(String affiliation) {
-        Host currentUser = (Host) UserService.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            throw new IllegalArgumentException("Current user is not a host");
-        }
-        currentUser.setAffiliation(affiliation);
+        getCurrentHost().setAffiliation(affiliation);
     }
 
     public void addSocialMediaLinkToArtist(String platform, String link) {
-        Artist currentUser = (Artist) UserService.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            throw new IllegalArgumentException("Current user is not an artist");
-        }
-        currentUser.addSocialMediaLink(platform, link);
+        getCurrentArtist().addSocialMediaLink(platform, link);
     }
 
     public void removeSocialMediaLinkFromArtist(String platform) {
-        Artist currentUser = (Artist) UserService.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            throw new IllegalArgumentException("Current user is not an artist");
-        }
-        currentUser.removeSocialMediaLink(platform);
-    }
-
-    public UserRoleEnum getRole() {
-        return role;
+        getCurrentArtist().removeSocialMediaLink(platform);
     }
 }

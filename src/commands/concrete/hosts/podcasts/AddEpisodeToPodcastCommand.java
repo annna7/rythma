@@ -4,11 +4,14 @@ import commands.Command;
 import enums.PlayableItemEnum;
 import factories.PlayableItemFactory;
 import models.audio.items.Episode;
+import models.users.Host;
+import models.users.User;
 import services.PodcastService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Predicate;
 
 import static utils.InputUtils.*;
 
@@ -30,5 +33,20 @@ public class AddEpisodeToPodcastCommand implements Command {
                                                                            release, podcastId, args);
 
         PodcastService.getInstance().addEpisodeToPodcast(episode, podcastId);
+    }
+
+    @Override
+    public Predicate<User> getVisibilityRule() {
+        return user -> user instanceof Host;
+    }
+
+    @Override
+    public String getCommandName() {
+        return "Add episode to podcast";
+    }
+
+    @Override
+    public String getCommandDescription() {
+        return "Add a new episode to a podcast, by providing the episode name, description, duration, number, release date, and guests";
     }
 }
