@@ -2,6 +2,7 @@ package models.users;
 
 import models.audio.collections.Playlist;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,7 +13,7 @@ public class User {
     protected final String firstName;
     protected final String lastName;
     protected final String password;
-    private final List<Playlist> playlists;
+    private final List<Playlist> playlists = new ArrayList<>();
 
     public User(String username, String firstName, String lastName, String password) {
         this.username = username;
