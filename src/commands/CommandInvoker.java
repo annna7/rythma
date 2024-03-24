@@ -3,8 +3,10 @@ package commands;
 import exceptions.IllegalOperationException;
 import exceptions.NotFoundException;
 import exceptions.UnauthorizedAccessException;
+import services.AuditService;
 
 public class CommandInvoker {
+    AuditService auditService = AuditService.getInstance();
     public void executeCommand(Command command) {
         try {
             command.execute();
@@ -17,5 +19,7 @@ public class CommandInvoker {
         } catch (Exception e) {
             System.out.println("An error occurred: " + e.getMessage());
         }
+
+        auditService.logAction(command.getCommandName());
     }
 }

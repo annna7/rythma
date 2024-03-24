@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class OutputUtils {
-    // TODO: MAKE THIS RETURN STRINGS
     public static String showCollectionEmptyMessage(String collectionType) {
         return "No " + collectionType + " found.";
     }
