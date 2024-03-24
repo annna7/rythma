@@ -6,6 +6,7 @@ import commands.concrete.artists.albums.*;
 import commands.concrete.hosts.UpdateAffiliationCommand;
 import commands.concrete.hosts.podcasts.*;
 import commands.concrete.users.*;
+import commands.concrete.users.notifications.*;
 import commands.concrete.users.playlists.*;
 
 import java.util.*;
@@ -34,6 +35,11 @@ public class CliService {
         commands.add(new RemoveEpisodeFromPodcastCommand());
         commands.add(new RemovePodcastCommand());
         commands.add(new UpdateAffiliationCommand());
+        commands.add(new FollowUnfollowArtistCommand());
+        commands.add(new FollowUnfollowHostCommand());
+        commands.add(new FollowUnfollowPlaylistCommand());
+        commands.add(new ViewNotificationsCommand());
+        commands.add(new ClearNotificationsCommand());
         commands.add(new LoginCommand());
         commands.add(new RegisterCommand());
         commands.add(new ExitCommand());

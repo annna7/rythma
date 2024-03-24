@@ -13,7 +13,6 @@ public class RemoveEpisodeFromPodcastCommand implements Command {
     @Override
     public void execute() {
         int podcastId = Integer.parseInt(askForField("podcast id"));
-        // TODO: should validate podcast exists here
         int episodeId = Integer.parseInt(askForField("episode id"));
 
         PodcastService.getInstance().removeEpisodeFromPodcast(podcastId, episodeId);

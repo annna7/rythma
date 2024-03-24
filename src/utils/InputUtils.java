@@ -5,6 +5,7 @@ import enums.SongGenreEnum;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.function.Function;
 
 public class InputUtils {
     private final static Scanner scanner = new Scanner(System.in);
@@ -13,6 +14,11 @@ public class InputUtils {
         return scanner.nextLine();
     }
 
+    public static <T> T askForField(String fieldName, Function<String, T> parser) {
+        System.out.println("Enter your " + fieldName + ": ");
+        String input = scanner.nextLine();
+        return parser.apply(input);
+    }
 
     public static LocalDate askForReleaseDate() {
         System.out.println("Default release date is today. Press enter to use it.");

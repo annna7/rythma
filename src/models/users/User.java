@@ -1,11 +1,11 @@
 package models.users;
 
+import models.Notification;
 import models.audio.collections.Playlist;
 import observable.Observer;
+import observable.Observable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class User implements Observer {
     private static int idCounter = 0;
@@ -15,7 +15,9 @@ public class User implements Observer {
     protected final String lastName;
     protected final String password;
     private final List<Playlist> playlists = new ArrayList<>();
-    private final List<String> notifications = new ArrayList<>();
+    // Sorted Container - Notifications are sorted by priority, timestamp, and whether they have been read
+    private final Set<Notification> notifications = new TreeSet<>();
+    public final Set<Observable> subscriptions = new HashSet<>();
 
     public User(String username, String firstName, String lastName, String password) {
         this.username = username;
@@ -86,13 +88,20 @@ public class User implements Observer {
     }
 
     @Override
-    public void update(String message) {
-        notifications.add(message);
+    public void update(Notification notification) {
+        notifications.add(notification);
     }
 
-    public void getNotifications() {
-        for (String notification : notifications) {
-            System.out.println(notification);
-        }
+    public Set<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public Set<Observable> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void subscribe(Observable observable) {
+        subscriptions.add(observable);
+        observable.attach(this);
     }
 }

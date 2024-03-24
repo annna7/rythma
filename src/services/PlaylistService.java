@@ -49,7 +49,7 @@ public class PlaylistService {
         return currentUser.getPlaylists();
     }
 
-    private Playlist getPlaylist(int playlistId) {
+    public Playlist getPlaylist(int playlistId) {
         User currentUser = UserService.getInstance().getCurrentUser();
         return currentUser.getPlaylists().stream().filter(p -> p.getId() == playlistId).findFirst().orElseThrow(() -> new NotFoundException("Playlist"));
     }

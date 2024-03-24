@@ -7,13 +7,10 @@ import services.NotificationService;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import static utils.InputUtils.askForField;
-
-public class FollowUnfollowArtistCommand implements Command {
+public class ClearNotificationsCommand implements Command {
     @Override
     public void execute() {
-        int artistId = askForField("artist ID", Integer::parseInt);
-        NotificationService.getInstance().subscribeOrUnsubscribeFromArtist(artistId);
+        NotificationService.getInstance().clearNotifications();
     }
 
     @Override
@@ -23,11 +20,11 @@ public class FollowUnfollowArtistCommand implements Command {
 
     @Override
     public String getCommandName() {
-        return "Follow/Unfollow Artist";
+        return "Clear Notifications";
     }
 
     @Override
     public String getCommandDescription() {
-        return "Follow or unfollow an artist, given their id (toggle efect)";
+        return "Clear all your notifications";
     }
 }

@@ -1,5 +1,7 @@
 package observable;
 
+import models.Notification;
+
 public interface Observer {
-    void update(String message);
+    void update(Notification notification);
 }

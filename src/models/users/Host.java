@@ -1,5 +1,7 @@
 package models.users;
 
+import enums.NotificationTypeEnum;
+import models.Notification;
 import models.audio.collections.Podcast;
 import observable.Observable;
 import observable.Observer;
@@ -7,10 +9,10 @@ import observable.Observer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Host extends User {
-    private final Observable observable = new Observable();
+public class Host extends User implements Observable {
     private final List<Podcast> podcasts = new ArrayList<>();
     private String affiliation;
+    private final List<Observer> observers = new ArrayList<>();
 
     public Host(String username, String firstName, String lastName, String password, String affiliation) {
         super(username, firstName, lastName, password);
@@ -19,7 +21,7 @@ public class Host extends User {
 
     public void addPodcast(Podcast podcast) {
         podcasts.add(podcast);
-        notifyObservers("New podcast added by " + this.getUsername() + ": " + podcast.getName());
+        notifyObservers(new Notification(NotificationTypeEnum.NEW_EPISODE,"New podcast added by " + this.getUsername() + ": " + podcast.getName()));
     }
 
     public void removePodcast(Podcast podcast) {
@@ -38,15 +40,26 @@ public class Host extends User {
         return podcasts;
     }
 
-    public void attach(Observer observable) {
-        this.observable.attach(observable);
+    @Override
+    public String toString() {
+        return "Host{" +
+                super.toString() +
+                "affiliation='" + affiliation + '\'' +
+                '}';
     }
 
-    public void detach(Observer observable) {
-        this.observable.detach(observable);
+    @Override
+    public void attach(Observer observer) {
+        observers.add(observer);
     }
 
-    public void notifyObservers(String message) {
-        this.observable.notifyObservers(message);
+    @Override
+    public void detach(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(Notification notification) {
+        observers.forEach(observer -> observer.update(notification));
     }
 }

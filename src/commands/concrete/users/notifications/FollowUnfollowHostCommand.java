@@ -9,11 +9,12 @@ import java.util.function.Predicate;
 
 import static utils.InputUtils.askForField;
 
-public class FollowUnfollowArtistCommand implements Command {
+
+public class FollowUnfollowHostCommand implements Command {
     @Override
     public void execute() {
-        int artistId = askForField("artist ID", Integer::parseInt);
-        NotificationService.getInstance().subscribeOrUnsubscribeFromArtist(artistId);
+        int hostId = askForField("host ID", Integer::parseInt);
+        NotificationService.getInstance().subscribeOrUnsubscribeFromHost(hostId);
     }
 
     @Override
@@ -23,11 +24,11 @@ public class FollowUnfollowArtistCommand implements Command {
 
     @Override
     public String getCommandName() {
-        return "Follow/Unfollow Artist";
+        return "Follow/Unfollow Host";
     }
 
     @Override
     public String getCommandDescription() {
-        return "Follow or unfollow an artist, given their id (toggle efect)";
+        return "Follow or unfollow a host, given their id (toggle effect)";
     }
 }
