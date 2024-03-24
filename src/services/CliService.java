@@ -40,6 +40,8 @@ public class CliService {
         commands.add(new FollowUnfollowPlaylistCommand());
         commands.add(new ViewNotificationsCommand());
         commands.add(new ClearNotificationsCommand());
+        commands.add(new TogglePlaylistVisibilityCommand());
+        commands.add(new SearchCommand());
         commands.add(new LoginCommand());
         commands.add(new RegisterCommand());
         commands.add(new ExitCommand());

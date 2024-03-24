@@ -17,6 +17,10 @@ public abstract class PlayableItem {
         this.collectionId = collectionId;
     }
 
+    public int getCollectionId() {
+        return collectionId;
+    }
+
     public int getId() {
         return id;
     }

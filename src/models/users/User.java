@@ -1,5 +1,6 @@
 package models.users;
 
+import exceptions.NotFoundException;
 import models.Notification;
 import models.audio.collections.Playlist;
 import observable.Observer;
@@ -10,6 +11,7 @@ import java.util.*;
 public class User implements Observer {
     private static int idCounter = 0;
     private final int id = idCounter++;
+    protected final String displayName;
     protected final String username;
     protected final String firstName;
     protected final String lastName;
@@ -24,6 +26,7 @@ public class User implements Observer {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
+        this.displayName = firstName + " " + lastName;
     }
 
     public int getId() {
@@ -42,6 +45,9 @@ public class User implements Observer {
         return lastName;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
     public String getPassword() { return password; }
 
     public List<Playlist> getPlaylists() {
@@ -54,7 +60,7 @@ public class User implements Observer {
 
     public void removePlaylist(Playlist playlist) {
         if (!playlists.contains(playlist)) {
-            throw new IllegalArgumentException("Playlist not found");
+            throw new NotFoundException("Playlist");
         }
         playlists.remove(playlist);
     }
@@ -100,6 +106,7 @@ public class User implements Observer {
         return subscriptions;
     }
 
+    // TODO: Why is this unused?
     public void subscribe(Observable observable) {
         subscriptions.add(observable);
         observable.attach(this);

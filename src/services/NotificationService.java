@@ -1,9 +1,11 @@
 package services;
 
+import exceptions.IllegalOperationException;
+import exceptions.UnauthorizedAccessException;
+import models.audio.collections.Playlist;
 import models.users.Artist;
 import models.users.Host;
 import models.users.User;
-import observable.Observable;
 
 public class NotificationService {
     private static NotificationService instance;
@@ -18,7 +20,7 @@ public class NotificationService {
 
     public void subscribeOrUnsubscribeFromArtist(int artistId) {
         User currentUser = UserService.getInstance().getCurrentUser();
-        Artist artist = UserService.getInstance().getArtist(artistId);
+        Artist artist = UserService.getInstance().getArtistById(artistId);
         if (currentUser.getSubscriptions().contains(artist)) {
             artist.detach(currentUser);
         } else {
@@ -28,7 +30,7 @@ public class NotificationService {
 
     public void subscribeOrUnsubscribeFromHost(int hostId) {
         User currentUser = UserService.getInstance().getCurrentUser();
-        Host host = UserService.getInstance().getHost(hostId);
+        Host host = UserService.getInstance().getHostById(hostId);
         if (currentUser.getSubscriptions().contains(host)) {
             host.detach(currentUser);
         } else {
@@ -38,10 +40,15 @@ public class NotificationService {
 
     public void subscribeOrUnsubscribeFromPlaylist(int playlistId) {
         User currentUser = UserService.getInstance().getCurrentUser();
-        Observable playlist = PlaylistService.getInstance().getPlaylist(playlistId);
+        Playlist playlist = PlaylistService.getInstance().getPlaylist(playlistId);
         if (currentUser.getSubscriptions().contains(playlist)) {
             playlist.detach(currentUser);
         } else {
+            if (!playlist.isPublic()) {
+                throw new UnauthorizedAccessException("Playlist");
+            } else if (playlist.getOwnerId() == currentUser.getId()) {
+                throw new IllegalOperationException("You cannot subscribe to your own playlist");
+            }
             playlist.attach(currentUser);
         }
     }

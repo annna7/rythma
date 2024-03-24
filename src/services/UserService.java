@@ -29,7 +29,7 @@ public class UserService {
     }
 
     public boolean login(String username, String password) {
-        User user = getUser(username);
+        User user = getUserByUsername(username);
         if (user.getPassword().equals(password)) {
             setCurrentUser(user);
             return true;
@@ -51,20 +51,20 @@ public class UserService {
         setCurrentUser(null);
     }
 
-    public User getUser(int userId) {
+    public User getUserById(int userId) {
         return users.stream().filter(u -> u.getId() == userId).findFirst().orElseThrow(() -> new NotFoundException("User"));
     }
 
-    public Artist getArtist(int artistId) {
-        return RoleValidator.validateRole(getUser(artistId), UserRoleEnum.ARTIST, Artist.class);
-    }
-
-    public Host getHost(int hostId) {
-        return RoleValidator.validateRole(getUser(hostId), UserRoleEnum.HOST, Host.class);
-    }
-
-    private User getUser(String username) {
+    public User getUserByUsername(String username) {
         return users.stream().filter(u -> u.getUsername().equals(username)).findFirst().orElseThrow(() -> new NotFoundException("User"));
+    }
+
+    public Artist getArtistById(int artistId) {
+        return RoleValidator.validateRole(getUserById(artistId), UserRoleEnum.ARTIST, Artist.class);
+    }
+
+    public Host getHostById(int hostId) {
+        return RoleValidator.validateRole(getUserById(hostId), UserRoleEnum.HOST, Host.class);
     }
 
     public User getCurrentUser() {
@@ -97,5 +97,13 @@ public class UserService {
 
     public void removeSocialMediaLinkFromArtist(String platform) {
         getCurrentArtist().removeSocialMediaLink(platform);
+    }
+
+    public List<Artist> getAllArtists() {
+        return users.stream().filter(u -> u instanceof Artist).map(u -> (Artist) u).toList();
+    }
+
+    public List<Host> getAllHosts() {
+        return users.stream().filter(u -> u instanceof Host).map(u -> (Host) u).toList();
     }
 }

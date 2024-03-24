@@ -1,5 +1,6 @@
 package services;
 
+import exceptions.IllegalOperationException;
 import exceptions.NotFoundException;
 import models.audio.collections.Album;
 import models.audio.items.Song;
@@ -21,12 +22,16 @@ public class MusicService {
         return instance;
     }
 
-    public Album getAlbum(int albumId) {
+    public Album getAlbumById(int albumId) {
         return albums.stream().filter(a -> a.getId() == albumId).findFirst().orElseThrow(() -> new NotFoundException("Album"));
     }
 
     public Song getSong(int songId) {
         return allSongs.stream().filter(s -> s.getId() == songId).findFirst().orElseThrow(() -> new NotFoundException("Song"));
+    }
+
+    public List<Song> getAllSongs() {
+        return allSongs;
     }
 
     public List<Album> getCurrentAlbums() {
@@ -40,7 +45,7 @@ public class MusicService {
     }
 
     public void addSongToAlbum(Song song, int albumId) {
-        Album album = getAlbum(albumId);
+        Album album = getAlbumById(albumId);
         if (album == null) {
             throw new IllegalArgumentException("Album not found");
         }
@@ -50,10 +55,10 @@ public class MusicService {
 
 
     public void removeAlbum(int albumId) {
-        Album album = getAlbum(albumId);
+        Album album = getAlbumById(albumId);
         Artist artist = UserService.getInstance().getCurrentArtist();
         if (album.getOwnerId() != artist.getId()) {
-            throw new IllegalArgumentException("You can't remove an album you don't own");
+            throw new IllegalOperationException("You can't remove an album you don't own");
         }
         artist.removeAlbum(album);
         albums.remove(album);
@@ -61,10 +66,10 @@ public class MusicService {
 
     public void removeSongFromAlbum(int songId) {
         Song song = getSong(songId);
-        Album album = getAlbum(song.getAlbumId());
+        Album album = getAlbumById(song.getAlbumId());
 
         if (album.getOwnerId() != UserService.getInstance().getCurrentUser().getId()) {
-            throw new IllegalArgumentException("You can't remove a song from an album you don't own");
+            throw new IllegalOperationException("You can't remove a song from an album you don't own");
         }
 
         album.removeItem(song);
@@ -72,6 +77,19 @@ public class MusicService {
     }
 
 
+    public List<Album> getAllAlbums() {
+        return albums;
+    }
 
+    public String getArtistNameByAlbum(Album album) {
+        return UserService.getInstance().getUserById(album.getOwnerId()).getDisplayName();
+    }
 
+    public Album getAlbumBySong(Song song) {
+        return getAlbumById(song.getAlbumId());
+    }
+
+    public String getArtistNameBySong(Song song) {
+        return UserService.getInstance().getUserById(getAlbumBySong(song).getOwnerId()).getDisplayName();
+    }
 }

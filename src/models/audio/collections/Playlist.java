@@ -10,15 +10,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Playlist extends AudioCollection<Song> implements Observable {
+    private boolean isPublic;
     private final String description;
     private final List<Observer> observers = new ArrayList<>();
     public Playlist(String name, String description, boolean isPublic) {
         super(name);
         this.description = description;
+        this.isPublic = isPublic;
     }
+
+    public Playlist(String name, String description, String isPublicValue) {
+        this(name, description, Boolean.parseBoolean(isPublicValue));
+    }
+
 
     public String getDescription() {
         return description;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
     @Override

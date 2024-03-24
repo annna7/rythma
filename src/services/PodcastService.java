@@ -23,20 +23,16 @@ public class PodcastService {
     }
 
     public void addEpisodeToPodcast(Episode episode, int podcastId) {
-        Podcast podcast = getPodcast(podcastId);
+        Podcast podcast = getPodcastById(podcastId);
         podcast.addItem(episode);
     }
 
-    private Podcast getPodcast(int podcastId) {
+    private Podcast getPodcastById(int podcastId) {
         return podcasts.stream().filter(p -> p.getId() == podcastId).findFirst().orElseThrow(() -> new NotFoundException("Podcast"));
     }
 
-    private Episode getEpisode(int episodeId) {
-        return podcasts.stream().flatMap(p -> p.getItems().stream()).filter(e -> e.getId() == episodeId).findFirst().orElseThrow(() -> new NotFoundException("Episode"));
-    }
-
     private Episode getEpisode(int podcastId, int episodeId) {
-        return getPodcast(podcastId).getItems().stream().filter(e -> e.getId() == episodeId).findFirst().orElseThrow(() -> new NotFoundException("Episode"));
+        return getPodcastById(podcastId).getItems().stream().filter(e -> e.getId() == episodeId).findFirst().orElseThrow(() -> new NotFoundException("Episode"));
     }
     public List<Podcast> getPodcastsForCurrentUser() {
         Host host = UserService.getInstance().getCurrentHost();
@@ -50,15 +46,35 @@ public class PodcastService {
     }
 
     public void removeEpisodeFromPodcast(int podcastId, int episodeId) {
-        Podcast podcast = getPodcast(podcastId);
+        Podcast podcast = getPodcastById(podcastId);
         Episode episode = getEpisode(podcastId, episodeId);
         podcast.removeItem(episode);
     }
 
     public void removePodcast(int podcastId) {
         Host host = UserService.getInstance().getCurrentHost();
-        Podcast podcast = getPodcast(podcastId);
+        Podcast podcast = getPodcastById(podcastId);
         host.removePodcast(podcast);
         podcasts.remove(podcast);
+    }
+
+    public List<Episode> getAllEpisodes() {
+        return podcasts.stream().flatMap(p -> p.getItems().stream()).toList();
+    }
+
+    public List<Podcast> getAllPodcasts() {
+        return podcasts;
+    }
+
+    public String getPodcastNameByEpisode(Episode episode) {
+        return getPodcastById(episode.getCollectionId()).getName();
+    }
+
+    public String getHostNameByPodcast(Podcast podcast) {
+        return UserService.getInstance().getUserById(podcast.getOwnerId()).getDisplayName();
+    }
+
+    public String getHostNamesByEpisode(Episode episode) {
+        return getHostNameByPodcast(getPodcastById(episode.getCollectionId()));
     }
 }

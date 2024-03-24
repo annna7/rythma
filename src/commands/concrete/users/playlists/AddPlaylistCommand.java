@@ -17,8 +17,9 @@ public class AddPlaylistCommand implements Command {
     public void execute() {
         String playlistName = askForField("playlist name");
         String playlistDescription = askForField("playlist description");
+        String isPublic = askForField("playlist visibility (true/false for public/private)");
 
-        Playlist playlist = (Playlist) AudioCollectionFactory.createAudioCollection(AudioCollectionEnum.PLAYLIST, playlistName, playlistDescription);
+        Playlist playlist = (Playlist) AudioCollectionFactory.createAudioCollection(AudioCollectionEnum.PLAYLIST, playlistName, playlistDescription, isPublic);
 
         PlaylistService.getInstance().addPlaylist(playlist);
     }

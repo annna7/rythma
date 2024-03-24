@@ -1,6 +1,8 @@
 package services;
 
+import exceptions.IllegalOperationException;
 import exceptions.NotFoundException;
+import exceptions.UnauthorizedAccessException;
 import models.audio.collections.Playlist;
 import models.audio.items.Song;
 import models.users.User;
@@ -52,5 +54,18 @@ public class PlaylistService {
     public Playlist getPlaylist(int playlistId) {
         User currentUser = UserService.getInstance().getCurrentUser();
         return currentUser.getPlaylists().stream().filter(p -> p.getId() == playlistId).findFirst().orElseThrow(() -> new NotFoundException("Playlist"));
+    }
+
+    public void togglePlaylistVisibility(int playlistId) {
+        Playlist playlist = getPlaylist(playlistId);
+        User currentUser = UserService.getInstance().getCurrentUser();
+        if (playlist.getOwnerId() != currentUser.getId()) {
+            throw new IllegalOperationException("You can only toggle the visibility of your own playlists");
+        }
+        playlist.setPublic(!playlist.isPublic());
+    }
+
+    public List<Playlist> getAllPublicPlaylists() {
+        return playlists.stream().filter(Playlist::isPublic).toList();
     }
 }
