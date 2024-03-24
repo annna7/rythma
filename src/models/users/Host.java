@@ -42,10 +42,13 @@ public class Host extends User implements Observable {
 
     @Override
     public String toString() {
-        return "Host{" +
-                super.toString() +
-                "affiliation='" + affiliation + '\'' +
-                '}';
+        return String.format("Host [ID: %d, Username: '%s', Name: '%s %s', Affiliation: '%s', Podcasts: %d]",
+                getId(),
+                getUsername(),
+                getFirstName(),
+                getLastName(),
+                affiliation,
+                podcasts.size());
     }
 
     @Override

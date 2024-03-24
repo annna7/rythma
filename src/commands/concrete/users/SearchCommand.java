@@ -59,11 +59,12 @@ public class SearchCommand implements Command {
         String query = askForField("your query", String::valueOf);
         Map<String, String> parsedQuery = parseQuery(query);
         List<?> searchResults = searchContext.executeSearch(parsedQuery);
+        searchResults.forEach(System.out::println);
     }
 
     private void showSearchFields(SearchStrategyEnum searchStrategy) {
         System.out.println("You can search by the following fields: " + String.join(", ", validFieldsPerType.get(searchStrategy)));
-        System.out.println("Query example: title: 'Bohemian Rhapsody', genre: 'rock");
+        System.out.println("Query example: title: 'Bohemian Rhapsody', genre: 'rock'");
     }
 
     private Map<String, String> parseQuery(String query) {
@@ -76,6 +77,9 @@ public class SearchCommand implements Command {
             }
             String key = keyValue[0].trim();
             String value = keyValue[1].trim();
+            if (value.charAt(0) == '\'' && value.charAt(value.length() - 1) == '\'') {
+                value = value.substring(1, value.length() - 1);
+            }
             if (!validFieldsPerType.get(searchContext.getStrategyType()).contains(key)) {
                 throw new IllegalArgumentException("Invalid field: " + key);
             }
@@ -96,6 +100,6 @@ public class SearchCommand implements Command {
 
     @Override
     public String getCommandDescription() {
-        return "Search for a song, album, artist, podcast, or playlist";
+        return "Search for a song, album, artist, podcast, playlist, podcast episode, or podcast host";
     }
 }

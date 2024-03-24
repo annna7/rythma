@@ -2,6 +2,8 @@ package models.audio.collections;
 
 import models.audio.items.Song;
 
+import static utils.OutputUtils.getCollectionMessageWithCommas;
+
 public class Album extends AudioCollection<Song> {
     private final String label;
     public Album(String name, String label) {
@@ -15,9 +17,7 @@ public class Album extends AudioCollection<Song> {
 
     @Override
     public String toString() {
-        return "Album{" +
-                super.toString() +
-                "label='" + label + '\'' +
-                '}';
+        return String.format("Album: %s (Label: %s)\nSongs: %s",
+                name, label, getCollectionMessageWithCommas("songs", items));
     }
 }

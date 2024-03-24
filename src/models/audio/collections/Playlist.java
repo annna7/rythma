@@ -9,6 +9,8 @@ import observable.Observer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static utils.OutputUtils.getCollectionMessageWithCommas;
+
 public class Playlist extends AudioCollection<Song> implements Observable {
     private boolean isPublic;
     private final String description;
@@ -44,11 +46,10 @@ public class Playlist extends AudioCollection<Song> implements Observable {
 
     @Override
     public String toString() {
-        return "Playlist{" +
-                super.toString() +
-                "description='" + description + '\'' +
-                '}';
+        return String.format("Playlist: %s (Description: %s, Public: %s)\nSongs: %s",
+                name, description, isPublic ? "Yes" : "No", getCollectionMessageWithCommas("songs", items));
     }
+
 
     @Override
     public void attach(Observer observer) {

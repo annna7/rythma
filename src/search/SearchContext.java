@@ -1,11 +1,12 @@
 package search;
 
 import enums.SearchStrategyEnum;
+import exceptions.IllegalOperationException;
 
 import java.util.*;
 
 public class SearchContext {
-    private SearchStrategy searchStrategy;
+    private SearchStrategy<?> searchStrategy;
     private SearchStrategyEnum searchStrategyType;
 
     public SearchContext() {}
@@ -15,10 +16,15 @@ public class SearchContext {
     }
 
     public void setStrategy(SearchStrategyEnum searchStrategy) {
+        this.searchStrategyType = searchStrategy;
         this.searchStrategy = searchStrategy.getStrategyFromEnum();
     }
 
     public List<?> executeSearch(Map<String, String> query) {
-        return searchStrategy.search(query);
+        try {
+            return searchStrategy.search(query);
+        } catch (Exception e) {
+            throw new IllegalOperationException("Search failed");
+        }
     }
 }

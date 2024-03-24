@@ -1,6 +1,7 @@
 package services;
 
 import commands.Command;
+import commands.CommandInvoker;
 import commands.concrete.artists.*;
 import commands.concrete.artists.albums.*;
 import commands.concrete.hosts.UpdateAffiliationCommand;
@@ -14,6 +15,8 @@ import java.util.*;
 
 public class CliService {
     private final UserService userService;
+    private final CommandInvoker commandInvoker = new CommandInvoker();
+
     private static final List<Command> commands = new ArrayList<>();
     static {
         commands.add(new ShowUserDetailsCommand());
@@ -44,6 +47,7 @@ public class CliService {
         commands.add(new SearchCommand());
         commands.add(new LoginCommand());
         commands.add(new RegisterCommand());
+        commands.add(new LogoutCommand());
         commands.add(new ExitCommand());
     }
 
@@ -92,7 +96,7 @@ public class CliService {
             if (selectedCommand == null) {
                 System.out.println("Invalid option. Please try again.");
             } else {
-                selectedCommand.execute();
+                commandInvoker.executeCommand(selectedCommand);
                 if (selectedCommand instanceof ExitCommand) {
                     System.out.println("Thank you for using Rythma!");
                     break;

@@ -32,14 +32,4 @@ public abstract class PlayableItem {
     public int getLength() {
         return length;
     }
-
-    @Override
-    public String toString() {
-        return "PlayableItem{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", length=" + length +
-                ", release=" + release +
-                '}';
-    }
 }

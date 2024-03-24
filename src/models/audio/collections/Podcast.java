@@ -2,6 +2,10 @@ package models.audio.collections;
 
 import models.audio.items.Episode;
 
+import java.util.stream.Collectors;
+
+import static utils.OutputUtils.getCollectionMessageWithCommas;
+
 public class Podcast extends AudioCollection<Episode> {
     private final String description;
     public Podcast(String name, String description) {
@@ -15,9 +19,7 @@ public class Podcast extends AudioCollection<Episode> {
 
     @Override
     public String toString() {
-        return "Podcast{" +
-                super.toString() +
-                "description='" + description + '\'' +
-                '}';
+        return String.format("Podcast: %s (Description: %s)\nEpisodes: %s",
+                name, description, getCollectionMessageWithCommas("episodes", items));
     }
 }

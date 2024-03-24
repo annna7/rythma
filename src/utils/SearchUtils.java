@@ -1,16 +1,36 @@
 package utils;
 
+import exceptions.IllegalOperationException;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
 public class SearchUtils {
+    public static List<Field> getAllFields(Class<?> type) {
+        List<Field> fields = new ArrayList<Field>();
+        for (Class<?> c = type; c != null; c = c.getSuperclass()) {
+            fields.addAll(Arrays.asList(c.getDeclaredFields()));
+        }
+        return fields;
+    }
+
+    public static Field getFieldByName(Class<?> type, String fieldName) {
+        for (Field field : getAllFields(type)) {
+            if (field.getName().equals(fieldName)) {
+                return field;
+            }
+        }
+        throw new IllegalOperationException("Field not found");
+    }
+
     public static <T> List<T> searchByAttribute(List<T> items, String attributeName, String attributeValue) throws NoSuchFieldException, IllegalAccessException {
         List<T> matchedItems = new ArrayList<>();
         for (T item : items) {
-            Field field = item.getClass().getDeclaredField(attributeName);
+            Field field = getFieldByName(item.getClass(), attributeName);
             field.setAccessible(true);
             Object value = field.get(item);
             if (value.toString().toLowerCase().contains(attributeValue.toLowerCase())) {
@@ -23,7 +43,7 @@ public class SearchUtils {
     public static <T> List<T> searchInSetAttribute(List<T> items, String attributeName, String attributeValue) throws NoSuchFieldException, IllegalAccessException {
         List<T> matchedItems = new ArrayList<>();
         for (T item : items) {
-            Field field = item.getClass().getDeclaredField(attributeName);
+            Field field = getFieldByName(item.getClass(), attributeName);
             field.setAccessible(true);
             Object value = field.get(item);
             if (value instanceof Set) {

@@ -13,23 +13,15 @@ public enum SearchStrategyEnum {
     PODCAST_EPISODE;
 
     public SearchStrategy getStrategyFromEnum() {
-        switch (this) {
-            case SONG:
-                return new SongStrategy();
-            case ALBUM:
-                return new AlbumStrategy();
-            case ARTIST:
-                return new ArtistStrategy();
-            case PODCAST:
-                return new PodcastStrategy();
-            case PLAYLIST:
-                return new PlaylistStrategy();
-            case HOST:
-                return new PodcastHostStrategy();
-            case PODCAST_EPISODE:
-                return new PodcastEpisodeStrategy();
-            default:
-                return null;
-        }
+        return switch (this) {
+            case SONG -> new SongStrategy();
+            case ALBUM -> new AlbumStrategy();
+            case ARTIST -> new ArtistStrategy();
+            case PODCAST -> new PodcastStrategy();
+            case PLAYLIST -> new PlaylistStrategy();
+            case HOST -> new PodcastHostStrategy();
+            case PODCAST_EPISODE -> new PodcastEpisodeStrategy();
+            default -> null;
+        };
     }
 }

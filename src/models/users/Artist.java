@@ -58,11 +58,14 @@ public class Artist extends User implements Observable {
 
     @Override
     public String toString() {
-        return "Artist{" +
-                super.toString() +
-                ", biography='" + biography + '\'' +
-                ", socialMediaLinks=" + socialMediaLinks +
-                '}';
+        return String.format("Artist [ID: %d, Username: '%s', Name: '%s %s', Biography: '%s', Albums: %d, Social Media Links: %s]",
+                getId(),
+                getUsername(),
+                getFirstName(),
+                getLastName(),
+                biography,
+                albums.size(),
+                socialMediaLinks);
     }
 
     @Override

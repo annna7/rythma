@@ -3,7 +3,6 @@ package search.strategies;
 import models.audio.collections.Album;
 import search.SearchStrategy;
 import services.MusicService;
-import services.UserService;
 import utils.SearchUtils;
 
 import java.util.List;

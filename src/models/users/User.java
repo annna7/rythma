@@ -67,13 +67,12 @@ public class User implements Observer {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", playlists=" + playlists +
-                '}';
+        return String.format("User [ID: %d, Username: '%s', Name: '%s', Playlists: %d]",
+                getId(),
+                getUsername(),
+                getDisplayName(),
+                playlists.size()
+        );
     }
 
     @Override
@@ -106,9 +105,13 @@ public class User implements Observer {
         return subscriptions;
     }
 
-    // TODO: Why is this unused?
     public void subscribe(Observable observable) {
         subscriptions.add(observable);
         observable.attach(this);
+    }
+
+    public void unsubscribe(Observable observable) {
+        subscriptions.remove(observable);
+        observable.detach(this);
     }
 }

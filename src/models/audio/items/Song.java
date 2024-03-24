@@ -20,16 +20,17 @@ public class Song extends PlayableItem {
         return genres;
     }
 
+    // TODO: REMOVE ALBUM ID REPLACE WITH COLLECITON ID
+
     public int getAlbumId() {
         return albumId;
     }
 
     @Override
     public String toString() {
-        return "Song{" +
-                super.toString() +
-                "albumId=" + albumId +
-                ", genres=" + genres +
-                '}';
+        String genreList = genres.isEmpty() ? "No genres" : String.join(", ", genres);
+        return String.format("Song: %s (Length: %d mins, Released: %s, Album ID: %d, Genres: %s)",
+                title, length, release, albumId, genreList);
     }
+
 }

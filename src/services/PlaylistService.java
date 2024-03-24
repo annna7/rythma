@@ -2,7 +2,6 @@ package services;
 
 import exceptions.IllegalOperationException;
 import exceptions.NotFoundException;
-import exceptions.UnauthorizedAccessException;
 import models.audio.collections.Playlist;
 import models.audio.items.Song;
 import models.users.User;

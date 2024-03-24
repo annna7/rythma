@@ -32,11 +32,9 @@ public class Episode extends PlayableItem {
 
     @Override
     public String toString() {
-        return "Episode{" +
-                super.toString() +
-                "episodeNumber=" + episodeNumber +
-                ", showNotes='" + showNotes + '\'' +
-                ", guests=" + guests +
-                '}';
+        String guestList = guests.isEmpty() ? "No guests" : String.join(", ", guests);
+        return String.format("Episode %d: %s (Length: %d mins, Released: %s)\nShow Notes: %s\nGuests: %s",
+                episodeNumber, title, length, release, showNotes.isEmpty() ? "No show notes provided" : showNotes, guestList);
     }
+
 }

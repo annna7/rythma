@@ -1,12 +1,10 @@
 package search.strategies;
 
-import enums.SearchStrategyEnum;
 import models.audio.items.Song;
 import search.SearchStrategy;
 import services.MusicService;
 import utils.SearchUtils;
 
-import java.util.Set;
 import java.util.List;
 import java.util.Map;
 

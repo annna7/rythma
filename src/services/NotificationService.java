@@ -22,9 +22,9 @@ public class NotificationService {
         User currentUser = UserService.getInstance().getCurrentUser();
         Artist artist = UserService.getInstance().getArtistById(artistId);
         if (currentUser.getSubscriptions().contains(artist)) {
-            artist.detach(currentUser);
+            currentUser.unsubscribe(artist);
         } else {
-            artist.attach(currentUser);
+            currentUser.subscribe(artist);
         }
     }
 
@@ -32,9 +32,9 @@ public class NotificationService {
         User currentUser = UserService.getInstance().getCurrentUser();
         Host host = UserService.getInstance().getHostById(hostId);
         if (currentUser.getSubscriptions().contains(host)) {
-            host.detach(currentUser);
+            currentUser.unsubscribe(host);
         } else {
-            host.attach(currentUser);
+            currentUser.subscribe(host);
         }
     }
 
@@ -42,14 +42,14 @@ public class NotificationService {
         User currentUser = UserService.getInstance().getCurrentUser();
         Playlist playlist = PlaylistService.getInstance().getPlaylist(playlistId);
         if (currentUser.getSubscriptions().contains(playlist)) {
-            playlist.detach(currentUser);
+            currentUser.unsubscribe(playlist);
         } else {
             if (!playlist.isPublic()) {
-                throw new UnauthorizedAccessException("Playlist");
+                throw new IllegalOperationException("You cannot subscribe to a private playlist");
             } else if (playlist.getOwnerId() == currentUser.getId()) {
                 throw new IllegalOperationException("You cannot subscribe to your own playlist");
             }
-            playlist.attach(currentUser);
+            currentUser.subscribe(playlist);
         }
     }
 
