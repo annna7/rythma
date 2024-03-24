@@ -66,7 +66,7 @@ public class MusicService {
 
     public void removeSongFromAlbum(int songId) {
         Song song = getSong(songId);
-        Album album = getAlbumById(song.getAlbumId());
+        Album album = getAlbumById(song.getCollectionId());
 
         if (album.getOwnerId() != UserService.getInstance().getCurrentUser().getId()) {
             throw new IllegalOperationException("You can't remove a song from an album you don't own");
@@ -86,7 +86,7 @@ public class MusicService {
     }
 
     public Album getAlbumBySong(Song song) {
-        return getAlbumById(song.getAlbumId());
+        return getAlbumById(song.getCollectionId());
     }
 
     public String getArtistNameBySong(Song song) {
