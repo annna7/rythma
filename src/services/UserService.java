@@ -1,5 +1,6 @@
 package services;
 
+import database.DatabaseConnector;
 import enums.UserRoleEnum;
 import exceptions.NotFoundException;
 import models.users.Artist;
@@ -40,6 +41,7 @@ public class UserService {
 
     public void register(User user) {
         users.add(user);
+        DatabaseConnector.insertUser(user.getUsername(), user.getPassword(), user.getFirstName(), user.getLastName());
         setCurrentUser(user);
     }
 
