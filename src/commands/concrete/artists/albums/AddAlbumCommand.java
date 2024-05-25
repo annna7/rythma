@@ -8,13 +8,14 @@ import models.users.Artist;
 import models.users.User;
 import services.MusicService;
 
+import java.sql.SQLException;
 import java.util.function.Predicate;
 
 import static utils.InputUtils.askForField;
 
 public class AddAlbumCommand implements Command {
     @Override
-    public void execute() {
+    public void execute() throws SQLException {
         String name = askForField("the album name");
         String label = askForField("the album label");
 

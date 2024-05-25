@@ -1,9 +1,11 @@
 package commands.concrete.users;
 
 import commands.Command;
+import exceptions.BadLoginAttemptException;
 import models.users.User;
 import services.UserService;
 
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -11,19 +13,18 @@ import static utils.InputUtils.askForField;
 
 public class LoginCommand implements Command {
     @Override
-    public void execute() {
+    public void execute() throws SQLException {
         System.out.println("Fill in the following fields to log in: ");
         while (true) {
             String username = askForField("username");
             String password = askForField("password");
-            if (UserService.getInstance().login(username, password)) {
+            try {
+                UserService.getInstance().login(username, password);
                 break;
-            } else {
-                System.out.println("Invalid username or password. Please try again.");
+            } catch (BadLoginAttemptException e) {
+                System.out.println(e.getMessage());
             }
         }
-        // AuditService.getInstance().log("User logged in: " + UserService.getInstance().getCurrentUser());
-        // DatabaseService.getInstance().saveUser(UserService.getInstance().getCurrentUser());
     }
 
     @Override

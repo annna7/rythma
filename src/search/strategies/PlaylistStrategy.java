@@ -6,12 +6,13 @@ import services.PlaylistService;
 import services.UserService;
 import utils.SearchUtils;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 public class PlaylistStrategy implements SearchStrategy<Playlist> {
     @Override
-    public List<Playlist> search(Map<String, String> query) throws NoSuchFieldException, IllegalAccessException {
+    public List<Playlist> search(Map<String, String> query) throws NoSuchFieldException, IllegalAccessException, SQLException {
         List<Playlist> playlists = PlaylistService.getInstance().getAllPublicPlaylists();
         if (query.containsKey("name")) {
             playlists = SearchUtils.searchByAttribute(playlists, "name", query.get("name"));

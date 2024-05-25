@@ -6,6 +6,7 @@ import factories.UserFactory;
 import models.users.User;
 import services.UserService;
 
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -16,7 +17,7 @@ import static utils.InputUtils.askForRole;
 
 public class RegisterCommand implements Command {
     @Override
-    public void execute() {
+    public void execute() throws SQLException {
         System.out.println("Fill in the following fields to register: ");
         int roleIndex = askForRole();
         roleIndex -= 1; // 1-based index

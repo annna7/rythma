@@ -5,13 +5,14 @@ import models.users.Artist;
 import models.users.User;
 import services.UserService;
 
+import java.sql.SQLException;
 import java.util.function.Predicate;
 
 import static utils.InputUtils.askForField;
 
 public class AddSocialMediaLinkCommand implements Command {
     @Override
-    public void execute() {
+    public void execute() throws SQLException {
         String platform = askForField("social media platform");
         String link = askForField("profile link");
 

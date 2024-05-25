@@ -5,13 +5,14 @@ import models.users.Host;
 import models.users.User;
 import services.UserService;
 
+import java.sql.SQLException;
 import java.util.function.Predicate;
 
 import static utils.InputUtils.askForField;
 
 public class UpdateAffiliationCommand implements Command {
     @Override
-    public void execute() {
+    public void execute() throws SQLException {
         String affiliation = askForField("new affiliation");
         UserService.getInstance().updateHostAffiliation(affiliation);
     }

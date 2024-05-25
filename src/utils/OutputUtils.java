@@ -9,21 +9,31 @@ public class OutputUtils {
     }
 
     public static void showCollectionMessage(String collectionType, List<?> collection) {
+        StringBuilder sb = new StringBuilder();
         if (collection.isEmpty()) {
-            System.out.println(showCollectionEmptyMessage(collectionType));
+            sb.append(showCollectionEmptyMessage(collectionType));
         } else {
-            System.out.println(collectionType.toUpperCase() + ":");
+            sb.append(collectionType.toUpperCase()).append(":\n");
             for (Object item : collection) {
-                System.out.println(item);
+                sb.append(item).append("\n");
             }
         }
+        System.out.print(sb.toString());
     }
 
     public static String getCollectionMessageWithCommas(String collectionType, List<?> collection) {
         if (collection.isEmpty()) {
-           return showCollectionEmptyMessage(collectionType);
+            return showCollectionEmptyMessage(collectionType);
         } else {
-            return collection.stream().map(Object::toString).collect(Collectors.joining(", "));
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < collection.size(); i++) {
+                sb.append(collection.get(i));
+                if (i < collection.size() - 1) {
+                    sb.append(", ");
+                }
+            }
+            return sb.toString();
         }
     }
+
 }

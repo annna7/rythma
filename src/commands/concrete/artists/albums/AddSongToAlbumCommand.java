@@ -8,6 +8,7 @@ import models.users.Artist;
 import models.users.User;
 import services.MusicService;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.function.Predicate;
@@ -16,7 +17,7 @@ import static utils.InputUtils.*;
 
 public class AddSongToAlbumCommand implements Command {
     @Override
-    public void execute() {
+    public void execute() throws SQLException {
         String title = askForField("song title");
         int length = Integer.parseInt(askForField("song length"));
         int albumId = Integer.parseInt(askForField("album ID"));

@@ -8,13 +8,14 @@ import models.users.Host;
 import models.users.User;
 import services.PodcastService;
 
+import java.sql.SQLException;
 import java.util.function.Predicate;
 
 import static utils.InputUtils.askForField;
 
 public class AddPodcastCommand implements Command {
     @Override
-    public void execute() {
+    public void execute() throws SQLException {
         String podcastName = askForField("podcast name");
         String podcastDescription = askForField("podcast description");
 

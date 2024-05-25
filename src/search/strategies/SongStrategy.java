@@ -5,13 +5,14 @@ import search.SearchStrategy;
 import services.MusicService;
 import utils.SearchUtils;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 
 public class SongStrategy implements SearchStrategy<Song> {
     @Override
-    public List<Song> search(Map<String, String> query) throws NoSuchFieldException, IllegalAccessException{
+    public List<Song> search(Map<String, String> query) throws NoSuchFieldException, IllegalAccessException, SQLException {
         List<Song> songs = MusicService.getInstance().getAllSongs();
         if (query.containsKey("title")) {
             songs = SearchUtils.searchByAttribute(songs, "title", query.get("title"));

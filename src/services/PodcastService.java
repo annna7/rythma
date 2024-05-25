@@ -7,6 +7,7 @@ import models.users.Host;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PodcastService {
     private static PodcastService instance = null;
@@ -34,6 +35,7 @@ public class PodcastService {
     private Episode getEpisode(int podcastId, int episodeId) {
         return getPodcastById(podcastId).getItems().stream().filter(e -> e.getId() == episodeId).findFirst().orElseThrow(() -> new NotFoundException("Episode"));
     }
+
     public List<Podcast> getPodcastsForCurrentUser() {
         Host host = UserService.getInstance().getCurrentHost();
         return host.getPodcasts();
@@ -59,7 +61,7 @@ public class PodcastService {
     }
 
     public List<Episode> getAllEpisodes() {
-        return podcasts.stream().flatMap(p -> p.getItems().stream()).toList();
+        return podcasts.stream().flatMap(p -> p.getItems().stream()).collect(Collectors.toList());
     }
 
     public List<Podcast> getAllPodcasts() {

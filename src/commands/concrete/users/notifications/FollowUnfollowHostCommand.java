@@ -4,6 +4,7 @@ import commands.Command;
 import models.users.User;
 import services.NotificationService;
 
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -12,7 +13,7 @@ import static utils.InputUtils.askForField;
 
 public class FollowUnfollowHostCommand implements Command {
     @Override
-    public void execute() {
+    public void execute() throws SQLException {
         int hostId = askForField("host ID", Integer::parseInt);
         NotificationService.getInstance().subscribeOrUnsubscribeFromHost(hostId);
     }

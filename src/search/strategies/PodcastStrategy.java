@@ -5,12 +5,13 @@ import search.SearchStrategy;
 import services.PodcastService;
 import utils.SearchUtils;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 public class PodcastStrategy implements SearchStrategy<Podcast> {
     @Override
-    public List<Podcast> search(Map<String, String> query) throws NoSuchFieldException, IllegalAccessException {
+    public List<Podcast> search(Map<String, String> query) throws NoSuchFieldException, IllegalAccessException, SQLException {
         List<Podcast> podcasts = PodcastService.getInstance().getAllPodcasts();
         if (query.containsKey("title")) {
             podcasts = SearchUtils.searchByAttribute(podcasts, "name", query.get("title"));

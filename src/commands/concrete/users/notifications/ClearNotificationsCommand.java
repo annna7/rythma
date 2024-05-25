@@ -4,12 +4,13 @@ import commands.Command;
 import models.users.User;
 import services.NotificationService;
 
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.function.Predicate;
 
 public class ClearNotificationsCommand implements Command {
     @Override
-    public void execute() {
+    public void execute() throws SQLException {
         NotificationService.getInstance().clearNotifications();
     }
 

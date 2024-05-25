@@ -7,6 +7,7 @@ import models.audio.items.Song;
 import models.users.User;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PlaylistService {
     private static PlaylistService instance = null;
@@ -65,6 +66,6 @@ public class PlaylistService {
     }
 
     public List<Playlist> getAllPublicPlaylists() {
-        return playlists.stream().filter(Playlist::isPublic).toList();
+        return playlists.stream().filter(Playlist::isPublic).collect(Collectors.toList());
     }
 }

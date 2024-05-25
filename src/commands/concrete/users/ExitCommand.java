@@ -3,11 +3,12 @@ package commands.concrete.users;
 import commands.Command;
 import models.users.User;
 
+import java.sql.SQLException;
 import java.util.function.Predicate;
 
 public class ExitCommand implements Command {
     @Override
-    public void execute() {
+    public void execute() throws SQLException {
         System.out.println("Exit command executed!");
     }
 
