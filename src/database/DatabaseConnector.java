@@ -14,11 +14,9 @@ public class DatabaseConnector {
         try {
             if (connection == null || connection.isClosed()) {
                 connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                System.out.println("Connected to the database successfully.");
             }
         } catch (SQLException e) {
-            System.out.println("Could not connect to the database.");
-            e.printStackTrace();
+            System.out.printf("Could not connect to the database: %s\n", e.getMessage());
         }
         return connection;
     }
@@ -30,19 +28,7 @@ public class DatabaseConnector {
                 System.out.println("Disconnected from the database.");
             }
         } catch (SQLException e) {
-            System.out.println("Could not disconnect from the database.");
-            e.printStackTrace();
-        }
-    }
-
-    public static void insertUser(String username, String password, String firstName, String lastName) {
-        try {
-            connection.createStatement().executeUpdate(
-                    "INSERT INTO User (username, password, firstName, lastName) VALUES ('" + username + "', '" + password + "', '" + firstName + "', '" + lastName + "')");
-            System.out.println("User inserted successfully.");
-        } catch (SQLException e) {
-            System.out.println("Could not insert user.");
-            e.printStackTrace();
+            System.out.printf("Could not disconnect from the database: %s", e.getMessage());
         }
     }
 }

@@ -1,7 +1,6 @@
 package utils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class OutputUtils {
     public static String showCollectionEmptyMessage(String collectionType) {
@@ -18,7 +17,7 @@ public class OutputUtils {
                 sb.append(item).append("\n");
             }
         }
-        System.out.print(sb.toString());
+        System.out.print(sb);
     }
 
     public static String getCollectionMessageWithCommas(String collectionType, List<?> collection) {

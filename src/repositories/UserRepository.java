@@ -17,7 +17,7 @@ public class UserRepository implements IRepository<User> {
     private static final String DELETE_USER = "DELETE FROM User WHERE id = ?";
 
     @Override
-    public List<User> findAll() {
+    public List<User> findAll() throws SQLException {
         List<User> users = new ArrayList<>();
         try (Connection conn = DatabaseConnector.connect();
              PreparedStatement stmt = conn.prepareStatement(GET_ALL_USERS);
@@ -25,13 +25,11 @@ public class UserRepository implements IRepository<User> {
             while (rs.next()) {
                 users.add(new User(rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("password")));
             }
-        } catch (SQLException e) {
-            System.out.println("Error fetching users: " + e.getMessage());
+            return users;
         }
-        return users;
     }
 
-    public Optional<User> findById(int userId) {
+    public Optional<User> findById(int userId) throws SQLException {
         try (Connection conn = DatabaseConnector.connect();
              PreparedStatement stmt = conn.prepareStatement(GET_USER_BY_ID)) {
             stmt.setInt(1, userId);
@@ -39,13 +37,11 @@ public class UserRepository implements IRepository<User> {
             if (rs.next()) {
                 return Optional.of(new User(rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("password")));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
-    public Optional<User> findByUsername(String username) {
+    public Optional<User> findByUsername(String username) throws SQLException {
         try (Connection conn = DatabaseConnector.connect();
              PreparedStatement stmt = conn.prepareStatement(GET_USER_BY_USERNAME)) {
             stmt.setString(1, username);
@@ -53,14 +49,12 @@ public class UserRepository implements IRepository<User> {
             if (rs.next()) {
                 return Optional.of(new User(rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("password")));
             }
-        } catch (SQLException e) {
-            System.out.println("Error fetching user: " + e.getMessage());
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
     @Override
-    public boolean create(User user) {
+    public boolean create(User user) throws SQLException {
         try (Connection conn = DatabaseConnector.connect();
              PreparedStatement stmt = conn.prepareStatement(INSERT_USER)) {
             stmt.setString(1, user.getUsername());
@@ -68,14 +62,11 @@ public class UserRepository implements IRepository<User> {
             stmt.setString(3, user.getFirstName());
             stmt.setString(4, user.getLastName());
             return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.out.println("Error creating user: " + e.getMessage());
-            return false;
         }
     }
 
     @Override
-    public boolean update(User user) {
+    public boolean update(User user) throws SQLException {
         try (Connection conn = DatabaseConnector.connect();
              PreparedStatement stmt = conn.prepareStatement(UPDATE_USER)) {
             stmt.setString(1, user.getUsername());
@@ -84,21 +75,15 @@ public class UserRepository implements IRepository<User> {
             stmt.setString(4, user.getLastName());
             stmt.setInt(5, user.getId());
             return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.out.println("Error updating user: " + e.getMessage());
-            return false;
         }
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id) throws SQLException {
         try (Connection conn = DatabaseConnector.connect();
              PreparedStatement stmt = conn.prepareStatement(DELETE_USER)) {
             stmt.setInt(1, id);
             return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.out.println("Error deleting user: " + e.getMessage());
-            return false;
         }
     }
 }

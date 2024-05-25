@@ -7,7 +7,6 @@ import models.audio.collections.Playlist;
 import models.users.User;
 import services.PlaylistService;
 
-import java.sql.SQLException;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -15,7 +14,7 @@ import static utils.InputUtils.askForField;
 
 public class AddPlaylistCommand implements Command {
     @Override
-    public void execute() throws SQLException {
+    public void execute() {
         String playlistName = askForField("playlist name");
         String playlistDescription = askForField("playlist description");
         String isPublic = askForField("playlist visibility (true/false for public/private)");

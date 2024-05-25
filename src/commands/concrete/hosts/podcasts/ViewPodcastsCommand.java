@@ -5,14 +5,13 @@ import models.users.Host;
 import models.users.User;
 import services.PodcastService;
 
-import java.sql.SQLException;
 import java.util.function.Predicate;
 
 import static utils.OutputUtils.showCollectionMessage;
 
 public class ViewPodcastsCommand implements Command {
     @Override
-    public void execute() throws SQLException {
+    public void execute() {
         showCollectionMessage("podcasts", PodcastService.getInstance().getPodcastsForCurrentUser());
     }
 

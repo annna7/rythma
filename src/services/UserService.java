@@ -14,10 +14,7 @@ import repositories.UserRepository;
 import utils.RoleValidator;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class UserService {
     private static UserService instance = null;
@@ -46,7 +43,6 @@ public class UserService {
             User user = this.getUserByUsername(username);
             if (user.getPassword().equals(password)) {
                 setCurrentUser(user);
-                System.out.println("good login");
             } else {
                 throw new BadLoginAttemptException();
             }
@@ -63,7 +59,11 @@ public class UserService {
             // if a user with this username doesn't already exist, then the operation is successful
             // and create it in the database
             users.add(user);
-            userRepository.create(user);
+            try {
+                userRepository.create(user);
+            } catch (SQLException sqlException) {
+                System.out.printf("SQL error: %s%n", sqlException.getMessage());
+            }
             setCurrentUser(user);
         }
     }
@@ -76,40 +76,94 @@ public class UserService {
         setCurrentUser(null);
     }
 
-    public User getUserById(int userId) {
-        return users.stream()
+    public User getUserById(int userId) throws NotFoundException {
+        // try to find user in cache
+        Optional<User> cachedUser = users.stream()
                 .filter(u -> u.getId() == userId)
-                .findFirst()
-                .orElseGet(() -> {
-                    Optional<User> user = userRepository.findById(userId);
-                    if (user.isPresent()) {
-                        users.add(user.get());
-                        return user.get();
-                    }
-                    throw new NotFoundException(String.format("User with id %d not found", userId));
-                });
+                .findFirst();
+
+        if (cachedUser.isPresent()) {
+            return cachedUser.get();
+        }
+
+        // otherwise, try to find in the database
+        try {
+            Optional<User> user = userRepository.findById(userId);
+            if (user.isPresent()) {
+                users.add(user.get());
+                return user.get();
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // otherwise, not found
+        throw new NotFoundException(String.format("User with id %d", userId));
     }
 
-    public User getUserByUsername(String username) {
-        return users.stream()
+    public User getUserByUsername(String username) throws NotFoundException {
+        Optional<User> cachedUser = users.stream()
                 .filter(u -> Objects.equals(u.getUsername(), username))
-                .findFirst()
-                .orElseGet(() -> {
-                    Optional<User> user = userRepository.findByUsername(username);
-                    if (user.isPresent()) {
-                        users.add(user.get());
-                        return user.get();
-                    }
-                    throw new NotFoundException(String.format("User with name %s not found", username));
-                });
+                .findFirst();
+
+        if (cachedUser.isPresent()) {
+            return cachedUser.get();
+        }
+
+        try {
+            Optional<User> user = userRepository.findByUsername(username);
+            if (user.isPresent()) {
+                users.add(user.get());
+                return user.get();
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
+        }
+
+        throw new NotFoundException("User with username " + username + " not found");
     }
 
-    public Artist getArtistById(int artistId) {
-        return RoleValidator.validateRole(getUserById(artistId), UserRoleEnum.ARTIST, Artist.class);
+
+    public Artist getArtistById(int artistId) throws NotFoundException {
+        try {
+            Optional<Artist> artistOptional = users.stream()
+                    .filter(u -> u.getId() == artistId && u instanceof Artist)
+                    .map(u -> (Artist) u)
+                    .findFirst();
+
+            if (artistOptional.isEmpty()) {
+                artistOptional = artistRepository.findById(artistId);
+                artistOptional.ifPresent(users::add);
+            }
+
+            if (artistOptional.isPresent()) {
+                return artistOptional.get();
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
+        }
+        throw new NotFoundException("Artist with id " + artistId + " not found due to SQL error");
     }
 
-    public Host getHostById(int hostId) {
-        return RoleValidator.validateRole(getUserById(hostId), UserRoleEnum.HOST, Host.class);
+    public Host getHostById(int hostId) throws NotFoundException {
+        try {
+            Optional<Host> hostOptional = users.stream()
+                    .filter(u -> u.getId() == hostId && u instanceof Host)
+                    .map(u -> (Host) u)
+                    .findFirst();
+
+            if (hostOptional.isEmpty()) {
+                hostOptional = hostRepository.findById(hostId);
+                hostOptional.ifPresent(users::add);
+            }
+
+            if (hostOptional.isPresent()) {
+                return hostOptional.get();
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
+        }
+        throw new NotFoundException("Host with id " + hostId + " not found");
     }
 
     public User getCurrentUser() {
@@ -132,35 +186,58 @@ public class UserService {
         return RoleValidator.validateRole(currentUser, UserRoleEnum.HOST, Host.class);
     }
 
-    public void updateHostAffiliation(String affiliation) throws SQLException {
-        Host host = getCurrentHost();
-        if (!hostRepository.update(host)) {
-            throw new CurrentUserNotInDatabaseException(host.getUsername());
+    public void updateHostAffiliation(String affiliation) {
+        try {
+            Host host = getCurrentHost();
+            if (!hostRepository.update(host)) {
+                throw new CurrentUserNotInDatabaseException(host.getUsername());
+            }
+            host.setAffiliation(affiliation);
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
         }
-        host.setAffiliation(affiliation);
     }
 
-    public void addSocialMediaLinkToArtist(String platform, String link) throws SQLException {
-        Artist artist = getCurrentArtist();
-        if (!artistRepository.update(artist)) {
-            throw new CurrentUserNotInDatabaseException(artist.getUsername());
+    public void addSocialMediaLinkToArtist(String platform, String link) {
+        try {
+            Artist artist = getCurrentArtist();
+            if (!artistRepository.update(artist)) {
+                throw new CurrentUserNotInDatabaseException(artist.getUsername());
+            }
+            artist.addSocialMediaLink(platform, link);
         }
-        artist.addSocialMediaLink(platform, link);
-    }
-
-    public void removeSocialMediaLinkFromArtist(String platform) throws SQLException {
-        Artist artist = getCurrentArtist();
-        if (!artistRepository.update(artist)) {
-            throw new CurrentUserNotInDatabaseException(artist.getUsername());
+        catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
         }
-        artist.removeSocialMediaLink(platform);
     }
 
-    public List<Artist> getAllArtists() throws SQLException {
-        return artistRepository.findAll();
+    public void removeSocialMediaLinkFromArtist(String platform) {
+        try {
+            Artist artist = getCurrentArtist();
+            if (!artistRepository.update(artist)) {
+                throw new CurrentUserNotInDatabaseException(artist.getUsername());
+            }
+            artist.removeSocialMediaLink(platform);
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
+        }
     }
 
-    public List<Host> getAllHosts() throws SQLException {
-        return hostRepository.findAll();
+    public List<Artist> getAllArtists() {
+        try {
+            return artistRepository.findAll();
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
+            return List.of();
+        }
+    }
+
+    public List<Host> getAllHosts() {
+        try {
+            return hostRepository.findAll();
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
+            return List.of();
+        }
     }
 }

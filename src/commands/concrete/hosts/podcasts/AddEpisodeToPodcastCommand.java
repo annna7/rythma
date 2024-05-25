@@ -8,7 +8,6 @@ import models.users.Host;
 import models.users.User;
 import services.PodcastService;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +17,7 @@ import static utils.InputUtils.*;
 
 public class AddEpisodeToPodcastCommand implements Command {
     @Override
-    public void execute() throws SQLException {
+    public void execute() {
         String episodeName = askForField("episode name");
         String episodeDescription = askForField("episode description");
         int episodeDuration = Integer.parseInt(askForField("episode duration"));

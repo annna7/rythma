@@ -17,7 +17,7 @@ public class HostRepository implements IRepository<Host> {
     private static final String UPDATE_HOST = "UPDATE User JOIN Host ON User.UserID = Host.HostID SET Username = ?, Password = ?, FirstName = ?, LastName = ?, Affiliation = ? WHERE HostID = ?";
     private static final String DELETE_HOST = "DELETE FROM User WHERE UserID = ?";  // Cascade delete should handle Host table
 
-    public static Connection getDbConnection() throws SQLException {
+    public static Connection getDbConnection() {
         return DatabaseConnector.connect();
     }
 

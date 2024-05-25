@@ -5,14 +5,13 @@ import models.users.Artist;
 import models.users.User;
 import services.MusicService;
 
-import java.sql.SQLException;
 import java.util.function.Predicate;
 
 import static utils.InputUtils.askForField;
 
 public class RemoveSongFromAlbumCommand implements Command {
     @Override
-    public void execute() throws SQLException {
+    public void execute() {
         int songId = Integer.parseInt(askForField("the song ID"));
 
         MusicService.getInstance().removeSongFromAlbum(songId);

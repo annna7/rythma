@@ -5,7 +5,6 @@ import exceptions.BadLoginAttemptException;
 import models.users.User;
 import services.UserService;
 
-import java.sql.SQLException;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -13,7 +12,7 @@ import static utils.InputUtils.askForField;
 
 public class LoginCommand implements Command {
     @Override
-    public void execute() throws SQLException {
+    public void execute() {
         System.out.println("Fill in the following fields to log in: ");
         while (true) {
             String username = askForField("username");

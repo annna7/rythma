@@ -4,7 +4,6 @@ import commands.Command;
 import models.users.User;
 import services.NotificationService;
 
-import java.sql.SQLException;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -12,7 +11,7 @@ import static utils.InputUtils.askForField;
 
 public class FollowUnfollowPlaylistCommand implements Command {
     @Override
-    public void execute() throws SQLException {
+    public void execute() {
         int playlistId = askForField("playlist ID", Integer::parseInt);
          NotificationService.getInstance().subscribeOrUnsubscribeFromPlaylist(playlistId);
     }

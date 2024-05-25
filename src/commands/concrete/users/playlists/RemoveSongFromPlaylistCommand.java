@@ -4,7 +4,6 @@ import commands.Command;
 import models.users.User;
 import services.PlaylistService;
 
-import java.sql.SQLException;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -12,7 +11,7 @@ import static utils.InputUtils.askForField;
 
 public class RemoveSongFromPlaylistCommand implements Command {
     @Override
-    public void execute() throws SQLException {
+    public void execute() {
         int songId = Integer.parseInt(askForField("song ID"));
         int playlistId = Integer.parseInt(askForField("playlist ID"));
 

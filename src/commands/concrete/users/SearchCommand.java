@@ -5,7 +5,6 @@ import models.users.User;
 import search.SearchContext;
 import enums.SearchStrategyEnum;
 
-import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -25,7 +24,7 @@ public class SearchCommand implements Command {
 
     private final SearchContext searchContext = new SearchContext();
     @Override
-    public void execute() throws SQLException {
+    public void execute() {
         System.out.println("1. Search for a song\n2. Search for an album\n3. Search for an artist\n4. Search for a podcast\n5. Search for a playlist\n6. Search for a podcast episode\n7. Search for a host\n");
         int option = askForField("your option", Integer::parseInt);
 

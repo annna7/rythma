@@ -5,14 +5,13 @@ import models.users.Artist;
 import models.users.User;
 import services.MusicService;
 
-import java.sql.SQLException;
 import java.util.function.Predicate;
 
 import static utils.OutputUtils.showCollectionMessage;
 
 public class ViewAlbumsCommand implements Command {
     @Override
-    public void execute() throws SQLException {
+    public void execute() {
         showCollectionMessage("albums", MusicService.getInstance().getCurrentAlbums());
     }
 

@@ -4,13 +4,12 @@ import commands.Command;
 import models.users.User;
 import services.UserService;
 
-import java.sql.SQLException;
 import java.util.Objects;
 import java.util.function.Predicate;
 
 public class LogoutCommand implements Command {
     @Override
-    public void execute() throws SQLException {
+    public void execute() {
          UserService.getInstance().logout();
         // AuditService.getInstance().log("User logged out: " + UserService.getInstance().getCurrentUser());
     }
