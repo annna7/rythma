@@ -2,7 +2,12 @@ package repositories.users;
 
 import database.DatabaseConnector;
 import models.users.Host;
+import models.audio.collections.Podcast;
+import models.audio.items.Episode;
+
 import repositories.IRepository;
+import repositories.audio.collections.PodcastRepository;
+import utils.JsonUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,9 +23,12 @@ public class HostRepository implements IRepository<Host> {
     private static final String UPDATE_HOST = "UPDATE User JOIN Host ON User.UserID = Host.HostID SET Username = ?, Password = ?, FirstName = ?, LastName = ?, Affiliation = ? WHERE HostID = ?";
     private static final String DELETE_HOST = "DELETE FROM User WHERE UserID = ?";  // Cascade delete should handle Host table
 
+    private final PodcastRepository podcastRepository = new PodcastRepository();
+
     public static Connection getDbConnection() {
         return DatabaseConnector.connect();
     }
+
 
     public List<Host> findAll() throws SQLException {
         List<Host> hosts = new ArrayList<>();
@@ -28,7 +36,9 @@ public class HostRepository implements IRepository<Host> {
              PreparedStatement stmt = conn.prepareStatement(GET_ALL_HOSTS);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                hosts.add(new Host(rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Affiliation")));
+                Host host = new Host(rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Affiliation"));
+                host.getPodcasts().addAll(podcastRepository.findPodcastsByHostId(host.getId()));
+                hosts.add(host);
             }
         }
         return hosts;
@@ -40,7 +50,9 @@ public class HostRepository implements IRepository<Host> {
             stmt.setInt(1, hostId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return Optional.of(new Host(rs.getInt("UserID"), rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Affiliation")));
+                Host host = new Host(rs.getInt("UserID"), rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Affiliation"));
+                host.getPodcasts().addAll(podcastRepository.findPodcastsByHostId(host.getId()));
+                return Optional.of(host);
             }
         }
         return Optional.empty();

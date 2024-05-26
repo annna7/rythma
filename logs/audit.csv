@@ -100,3 +100,89 @@
 2024-05-26 15:12:43,View albums,5
 2024-05-26 15:13:15,Add song to album,5
 2024-05-26 15:13:19,View albums,5
+2024-05-26 15:38:21,Exit,5
+2024-05-26 15:38:48,Login,6
+2024-05-26 15:38:57,View podcasts,6
+2024-05-26 15:39:31,Add podcast,6
+2024-05-26 15:39:42,Add podcast,6
+2024-05-26 15:39:43,View podcasts,6
+2024-05-26 15:40:01,Add podcast,6
+2024-05-26 15:40:31,Add episode to podcast,6
+2024-05-26 15:44:15,Login,6
+2024-05-26 15:44:24,View podcasts,6
+2024-05-26 15:44:53,Search,6
+2024-05-26 15:45:35,Add episode to podcast,6
+2024-05-26 15:45:40,View podcasts,6
+2024-05-26 15:52:59,Login,6
+2024-05-26 15:53:15,View podcasts,6
+2024-05-26 16:18:16,Login,6
+2024-05-26 16:18:30,View podcasts,6
+2024-05-26 16:18:53,Add episode to podcast,6
+2024-05-26 16:18:57,View podcasts,6
+2024-05-26 16:19:27,Remove episode from podcast,6
+2024-05-26 16:31:43,Register,0
+2024-05-26 16:32:58,View podcasts,0
+2024-05-26 16:33:05,Add podcast,0
+2024-05-26 16:33:07,View podcasts,0
+2024-05-26 16:33:29,Add episode to podcast,0
+2024-05-26 16:33:30,View podcasts,0
+2024-05-26 17:11:31,Register,0
+2024-05-26 17:11:44,Add podcast,0
+2024-05-26 17:11:46,View podcasts,0
+2024-05-26 17:12:09,Add episode to podcast,0
+2024-05-26 17:13:48,Login,1
+2024-05-26 17:14:03,Show user details,1
+2024-05-26 17:14:13,View podcasts,1
+2024-05-26 17:15:33,Add podcast,1
+2024-05-26 17:16:10,Add episode to podcast,1
+2024-05-26 17:16:12,View podcasts,1
+2024-05-26 17:16:49,View podcasts,1
+2024-05-26 17:17:43,Remove episode from podcast,1
+2024-05-26 17:17:47,View podcasts,1
+2024-05-26 17:18:07,Add episode to podcast,1
+2024-05-26 17:18:48,Remove podcast,1
+2024-05-26 17:18:55,View podcasts,1
+2024-05-26 17:19:00,Show user details,1
+2024-05-26 17:19:19,Update affiliation,1
+2024-05-26 17:19:21,Show user details,1
+2024-05-26 17:20:05,Login,1
+2024-05-26 17:20:10,Update affiliation,1
+2024-05-26 17:20:10,Show user details,1
+2024-05-26 17:20:53,Logout,-1
+2024-05-26 17:21:14,Register,0
+2024-05-26 17:21:18,Show user details,0
+2024-05-26 17:21:24,Show user details,0
+2024-05-26 17:21:37,Add album,0
+2024-05-26 17:21:42,View albums,0
+2024-05-26 17:24:04,Show user details,0
+2024-05-26 17:24:46,Exit,0
+2024-05-26 17:24:54,Login,2
+2024-05-26 17:24:56,Show user details,2
+2024-05-26 17:27:04,Register,0
+2024-05-26 17:27:10,View albums,0
+2024-05-26 17:27:23,Add album,0
+2024-05-26 17:27:25,View albums,0
+2024-05-26 17:27:31,Show user details,0
+2024-05-26 17:29:18,Register,0
+2024-05-26 17:29:23,Add album,0
+2024-05-26 17:29:30,Show user details,0
+2024-05-26 17:30:49,Register,0
+2024-05-26 17:30:51,Show user details,0
+2024-05-26 17:33:30,Logout,-1
+2024-05-26 17:45:41,Register,0
+2024-05-26 17:45:46,Logout,-1
+2024-05-26 17:48:18,Register,8
+2024-05-26 17:48:21,Show user details,8
+2024-05-26 17:48:33,View albums,8
+2024-05-26 17:48:46,Add album,8
+2024-05-26 17:48:47,View albums,8
+2024-05-26 17:49:05,Add song to album,8
+2024-05-26 17:49:07,View albums,8
+2024-05-26 17:50:00,View albums,8
+2024-05-26 17:50:05,Logout,-1
+2024-05-26 17:51:17,Login,3
+2024-05-26 17:51:19,View albums,3
+2024-05-26 17:51:23,Logout,-1
+2024-05-26 17:51:31,Login,8
+2024-05-26 17:51:33,Show user details,8
+2024-05-26 17:51:36,View albums,8

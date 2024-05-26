@@ -19,8 +19,11 @@ public class PlayableItemFactory {
                 yield song;
             }
             case EPISODE -> {
-                Episode episode = new Episode(title, length, release, collectionId, Integer.parseInt(additionalInfo[0]),
-                                              additionalInfo[1]);
+                // args[0] - description
+                // args[1] - number
+                // rest - guests
+                Episode episode = new Episode(title, length, release, collectionId, Integer.parseInt(additionalInfo[1]),
+                                              additionalInfo[0]);
                 for (int i = 2; i < additionalInfo.length; i++) {
                     episode.addGuest(additionalInfo[i]);
                 }

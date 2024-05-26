@@ -1,9 +1,11 @@
 package repositories.audio.items;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import database.DatabaseConnector;
 import models.audio.items.Episode;
 import repositories.IRepository;
 import utils.JsonUtils;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +37,8 @@ public class EpisodeRepository implements IRepository<Episode> {
                         JsonUtils.fromJsonToList(rs.getString("Guests"))
                 ));
             }
-            return episodes;
         }
+        return episodes;
     }
 
     @Override
@@ -84,9 +86,10 @@ public class EpisodeRepository implements IRepository<Episode> {
 
             ResultSet generatedKeys = stmtPlayableItem.getGeneratedKeys();
             if (generatedKeys.next()) {
-                item.setId(generatedKeys.getInt(1));
+                int newId = generatedKeys.getInt(1);
+                item.setId(newId);
                 stmtEpisode = conn.prepareStatement(INSERT_EPISODE_DETAILS);
-                stmtEpisode.setInt(1, generatedKeys.getInt(1));
+                stmtEpisode.setInt(1, newId);
                 stmtEpisode.setInt(2, item.getEpisodeNumber());
                 stmtEpisode.setString(3, item.getShowNotes());
                 stmtEpisode.setString(4, JsonUtils.toJson(item.getGuests()));
@@ -97,7 +100,8 @@ public class EpisodeRepository implements IRepository<Episode> {
                 conn.rollback();
             }
         } catch (SQLException ex) {
-            System.out.printf("SQL error: %s\n", ex.getMessage());
+            System.out.println("SQLException: " + ex.getMessage());
+            conn.rollback();
         } finally {
             if (stmtPlayableItem != null) stmtPlayableItem.close();
             if (stmtEpisode != null) stmtEpisode.close();

@@ -69,22 +69,27 @@ public class UserService {
         } catch (NotFoundException e) {
             // if a user with this username doesn't already exist, then the operation is successful
             // and create it in the database
-            users.add(user);
             try {
                 switch (role) {
                     case ARTIST:
-                        artistRepository.create((Artist) user);
+                        Artist artist = (Artist) user;
+                        artistRepository.create(artist);
+                        setCurrentUser(artist);
                         break;
                     case HOST:
-                        hostRepository.create((Host) user);
+                        Host host = (Host) user;
+                        hostRepository.create(host);
+                        setCurrentUser(host);
                         break;
                     default:
                         userRepository.create(user);
+                        setCurrentUser(user);
                 }
+                users.add(user);
+                System.out.printf("New user id: %d", user.getId());
             } catch (SQLException sqlException) {
                 System.out.printf("SQL error: %s%n", sqlException.getMessage());
             }
-            setCurrentUser(user);
         }
     }
 
@@ -209,10 +214,10 @@ public class UserService {
     public void updateHostAffiliation(String affiliation) {
         try {
             Host host = getCurrentHost();
+            host.setAffiliation(affiliation);
             if (!hostRepository.update(host)) {
                 throw new CurrentUserNotInDatabaseException(host.getUsername());
             }
-            host.setAffiliation(affiliation);
         } catch (SQLException e) {
             System.out.println("SQL Error: " + e.getMessage());
         }

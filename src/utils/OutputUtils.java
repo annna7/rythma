@@ -17,7 +17,7 @@ public class OutputUtils {
                 sb.append(item).append("\n");
             }
         }
-        System.out.print(sb);
+        System.out.printf("%s\n", sb);
     }
 
     public static String getCollectionMessageWithCommas(String collectionType, List<?> collection) {

@@ -55,7 +55,7 @@ public class ArtistRepository implements IRepository<Artist> {
 
     public boolean create(Artist artist) throws SQLException {
         try (Connection conn = getDbConnection();
-             PreparedStatement stmtUser = conn.prepareStatement(INSERT_ARTIST, Statement.RETURN_GENERATED_KEYS);
+             PreparedStatement stmtUser = conn.prepareStatement(INSERT_ARTIST, new String[] { "UserID" });
              PreparedStatement stmtArtist = conn.prepareStatement(INSERT_ARTIST_BIO)) {
             conn.setAutoCommit(false);
             stmtUser.setString(1, artist.getUsername());
@@ -71,6 +71,7 @@ public class ArtistRepository implements IRepository<Artist> {
             try (ResultSet generatedKeys = stmtUser.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     artist.setId(generatedKeys.getInt(1));
+                    System.out.printf("New id from repo: %d", artist.getId());
                     stmtArtist.setString(1, artist.getBiography());
                     stmtArtist.executeUpdate();
                     conn.commit();
