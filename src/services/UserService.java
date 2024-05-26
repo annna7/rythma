@@ -226,10 +226,10 @@ public class UserService {
     public void addSocialMediaLinkToArtist(String platform, String link) {
         try {
             Artist artist = getCurrentArtist();
+            artist.addSocialMediaLink(platform, link);
             if (!artistRepository.update(artist)) {
                 throw new CurrentUserNotInDatabaseException(artist.getUsername());
             }
-            artist.addSocialMediaLink(platform, link);
         }
         catch (SQLException e) {
             System.out.println("SQL Error: " + e.getMessage());
@@ -239,10 +239,10 @@ public class UserService {
     public void removeSocialMediaLinkFromArtist(String platform) {
         try {
             Artist artist = getCurrentArtist();
+            artist.removeSocialMediaLink(platform);
             if (!artistRepository.update(artist)) {
                 throw new CurrentUserNotInDatabaseException(artist.getUsername());
             }
-            artist.removeSocialMediaLink(platform);
         } catch (SQLException e) {
             System.out.println("SQL Error: " + e.getMessage());
         }

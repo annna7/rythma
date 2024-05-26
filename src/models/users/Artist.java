@@ -37,6 +37,10 @@ public class Artist extends User implements Observable {
         albums.remove(album);
     }
 
+    public void setSocialMediaLinks(Map<String, String> socialMediaLinks) {
+        this.socialMediaLinks.putAll(socialMediaLinks);
+    }
+
     public void addSocialMediaLink(String platform, String link) {
         socialMediaLinks.put(platform, link);
     }

@@ -11,6 +11,7 @@ CREATE TABLE Artist
 (
     ArtistID INT AUTO_INCREMENT PRIMARY KEY,
     Biography TEXT,
+    SocialMedia JSON,
     FOREIGN KEY (ArtistID) REFERENCES User (UserID)
 );
 

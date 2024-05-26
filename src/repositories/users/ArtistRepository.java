@@ -4,6 +4,7 @@ import database.DatabaseConnector;
 import models.users.Artist;
 import repositories.IRepository;
 import repositories.audio.collections.AlbumRepository;
+import utils.JsonUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,12 +13,15 @@ import java.util.Optional;
 
 public class ArtistRepository implements IRepository<Artist> {
 
-    private static final String GET_ALL_ARTISTS = "SELECT * FROM Artist JOIN User ON Artist.ArtistID = User.UserID";
-    private static final String GET_ARTIST_BY_ID = "SELECT * FROM Artist JOIN User ON Artist.ArtistID = User.UserID WHERE ArtistID = ?";
+//    private static final String GET_ALL_ARTISTS = "SELECT * FROM Artist JOIN User ON Artist.ArtistID = User.UserID";
+//    private static final String GET_ARTIST_BY_ID = "SELECT * FROM Artist JOIN User ON Artist.ArtistID = User.UserID WHERE ArtistID = ?";
     private static final String INSERT_ARTIST = "INSERT INTO User (Username, Password, FirstName, LastName) VALUES (?, ?, ?, ?);";
     private static final String INSERT_ARTIST_BIO = "INSERT INTO Artist (ArtistID, Biography) VALUES (LAST_INSERT_ID(), ?);";
-    private static final String UPDATE_ARTIST = "UPDATE User JOIN Artist ON User.UserID = Artist.ArtistID SET Username = ?, Password = ?, FirstName = ?, LastName = ?, Biography = ? WHERE ArtistID = ?";
+//    private static final String UPDATE_ARTIST = "UPDATE User JOIN Artist ON User.UserID = Artist.ArtistID SET Username = ?, Password = ?, FirstName = ?, LastName = ?, Biography = ? WHERE ArtistID = ?";
     private static final String DELETE_ARTIST = "DELETE FROM User WHERE UserID = ?";  // Cascade delete should handle Artist table
+    private static final String GET_ALL_ARTISTS = "SELECT *, Artist.SocialMedia FROM Artist JOIN User ON Artist.ArtistID = User.UserID";
+    private static final String GET_ARTIST_BY_ID = "SELECT *, Artist.SocialMedia FROM Artist JOIN User ON Artist.ArtistID = User.UserID WHERE ArtistID = ?";
+    private static final String UPDATE_ARTIST = "UPDATE User JOIN Artist ON User.UserID = Artist.ArtistID SET Username = ?, Password = ?, FirstName = ?, LastName = ?, Biography = ?, SocialMedia = ? WHERE ArtistID = ?";
 
     private final AlbumRepository albumRepository = new AlbumRepository();
 
@@ -33,6 +37,7 @@ public class ArtistRepository implements IRepository<Artist> {
             while (rs.next()) {
                 Artist artist = new Artist(rs.getInt("UserID"), rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Biography"));
                 artist.getAlbums().addAll(albumRepository.findAlbumsByArtistId(artist.getId()));
+                artist.setSocialMediaLinks(JsonUtils.fromJsonToMap(rs.getString("SocialMedia")));
                 artists.add(artist);
             }
         }
@@ -40,17 +45,22 @@ public class ArtistRepository implements IRepository<Artist> {
     }
 
     public Optional<Artist> findById(int artistId) throws SQLException {
+        Artist artist = null;
         try (Connection conn = getDbConnection();
              PreparedStatement stmt = conn.prepareStatement(GET_ARTIST_BY_ID)) {
             stmt.setInt(1, artistId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                Artist artist = new Artist(rs.getInt("UserID"), rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Biography"));
-                artist.getAlbums().addAll(albumRepository.findAlbumsByArtistId(artistId));
-                return Optional.of(artist);
+                artist = new Artist(rs.getInt("UserID"), rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Biography"));
+                artist.setSocialMediaLinks(JsonUtils.fromJsonToMap(rs.getString("SocialMedia")));
             }
         }
-        return Optional.empty();
+        if (artist != null) {
+            artist.getAlbums().addAll(albumRepository.findAlbumsByArtistId(artistId));
+            return Optional.of(artist);
+        } else {
+            return Optional.empty();
+        }
     }
 
     public boolean create(Artist artist) throws SQLException {
@@ -92,7 +102,8 @@ public class ArtistRepository implements IRepository<Artist> {
             stmt.setString(3, artist.getFirstName());
             stmt.setString(4, artist.getLastName());
             stmt.setString(5, artist.getBiography());
-            stmt.setInt(6, artist.getId());
+            stmt.setString(6, JsonUtils.mapToJson(artist.getSocialMediaLinks()));
+            stmt.setInt(7, artist.getId());
             return stmt.executeUpdate() > 0;
         }
     }
