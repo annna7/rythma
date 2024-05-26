@@ -14,7 +14,7 @@ public class PodcastEpisodeStrategy implements SearchStrategy<Episode> {
     public List<Episode> search(Map<String, String> query) throws NoSuchFieldException, IllegalAccessException, SQLException {
         List<Episode> episodes = PodcastService.getInstance().getAllEpisodes();
         if (query.containsKey("title")) {
-            episodes = SearchUtils.searchByAttribute(episodes, "name", query.get("title"));
+            episodes = SearchUtils.searchByAttribute(episodes, "title", query.get("title"));
         }
         if (query.containsKey("podcast")) {
             episodes = SearchUtils.searchByAttributeUsingFunction(episodes, episode ->

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class UserRepository implements IRepository<User> {
     private static final String GET_ALL_USERS = "SELECT * FROM User";
-    private static final String GET_USER_BY_ID = "SELECT * FROM User WHERE id = ?";
+    private static final String GET_USER_BY_ID = "SELECT * FROM User WHERE UserID = ?";
     private static final String GET_USER_BY_USERNAME = "SELECT * FROM User WHERE username = ?";
     private static final String INSERT_USER = "INSERT INTO User (username, password, firstName, lastName) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_USER = "UPDATE User SET username = ?, password = ?, firstName = ?, lastName = ? WHERE id = ?";

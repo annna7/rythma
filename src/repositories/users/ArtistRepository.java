@@ -38,10 +38,15 @@ public class ArtistRepository implements IRepository<Artist> {
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Artist artist = new Artist(rs.getInt("UserID"), rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Biography"));
-                artist.getAlbums().addAll(albumRepository.findAlbumsByArtistId(artist.getId()));
                 artist.setSocialMediaLinks(JsonUtils.fromJsonToMap(rs.getString("SocialMedia")));
+                artist.setId(rs.getInt("UserID"));
                 artists.add(artist);
             }
+        }
+
+        for (Artist artist : artists) {
+            artist.getAlbums().addAll(albumRepository.findAlbumsByArtistId(artist.getId()));
+            artist.getPlaylists().addAll(playlistRepository.findAllPlaylistsByUserId(artist.getId()));
         }
         return artists;
     }
@@ -51,15 +56,17 @@ public class ArtistRepository implements IRepository<Artist> {
         try (Connection conn = getDbConnection();
              PreparedStatement stmt = conn.prepareStatement(GET_ARTIST_BY_ID)) {
             stmt.setInt(1, artistId);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                artist = new Artist(rs.getInt("UserID"), rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Biography"));
-                artist.setSocialMediaLinks(JsonUtils.fromJsonToMap(rs.getString("SocialMedia")));
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    artist = new Artist(rs.getInt("UserID"), rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Biography"));
+                    artist.setSocialMediaLinks(JsonUtils.fromJsonToMap(rs.getString("SocialMedia")));
+                    artist.setId(rs.getInt("UserID"));
+                }
             }
         }
         if (artist != null) {
             artist.getAlbums().addAll(albumRepository.findAlbumsByArtistId(artistId));
-            artist.getPlaylists().addAll(playlistRepository.findAllPlaylistsByUserId(artist.getId()));
+            artist.getPlaylists().addAll(playlistRepository.findAllPlaylistsByUserId(artistId));
             return Optional.of(artist);
         } else {
             return Optional.empty();

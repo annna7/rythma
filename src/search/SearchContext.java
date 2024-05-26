@@ -24,7 +24,7 @@ public class SearchContext {
         try {
             return searchStrategy.search(query);
         } catch (Exception e) {
-            throw new IllegalOperationException("Search failed");
+            throw new IllegalOperationException(String.format("Search failed %s", e.getMessage()));
         }
     }
 }

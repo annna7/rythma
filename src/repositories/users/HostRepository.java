@@ -11,9 +11,7 @@ import repositories.audio.collections.PodcastRepository;
 import utils.JsonUtils;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class HostRepository implements IRepository<Host> {
 
@@ -34,29 +32,48 @@ public class HostRepository implements IRepository<Host> {
 
     public List<Host> findAll() throws SQLException {
         List<Host> hosts = new ArrayList<>();
+        Map<Integer, Host> hostMap = new HashMap<>();
+
         try (Connection conn = getDbConnection();
              PreparedStatement stmt = conn.prepareStatement(GET_ALL_HOSTS);
              ResultSet rs = stmt.executeQuery()) {
+
             while (rs.next()) {
-                Host host = new Host(rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Affiliation"));
-                host.getPodcasts().addAll(podcastRepository.findPodcastsByHostId(host.getId()));
-                hosts.add(host);
+                int hostId = rs.getInt("HostID");
+                if (!hostMap.containsKey(hostId)) {
+                    Host host = new Host(rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Affiliation"));
+                    host.setId(hostId);
+                    hostMap.put(hostId, host);
+                    hosts.add(host);
+                }
             }
         }
+
+        for (Host host : hosts) {
+            host.getPodcasts().addAll(podcastRepository.findPodcastsByHostId(host.getId()));
+            host.getPlaylists().addAll(playlistRepository.findAllPlaylistsByUserId(host.getId()));
+        }
+
         return hosts;
     }
 
     public Optional<Host> findById(int hostId) throws SQLException {
+        Host host = null;
         try (Connection conn = getDbConnection();
              PreparedStatement stmt = conn.prepareStatement(GET_HOST_BY_ID)) {
             stmt.setInt(1, hostId);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                Host host = new Host(rs.getInt("UserID"), rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Affiliation"));
-                host.getPodcasts().addAll(podcastRepository.findPodcastsByHostId(host.getId()));
-                host.getPlaylists().addAll(playlistRepository.findAllPlaylistsByUserId(host.getId()));
-                return Optional.of(host);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    host = new Host(rs.getInt("UserID"), rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Affiliation"));
+                    host.setId(rs.getInt("UserID"));
+                }
             }
+        }
+
+        if (host != null) {
+            host.getPodcasts().addAll(podcastRepository.findPodcastsByHostId(host.getId()));
+            host.getPlaylists().addAll(playlistRepository.findAllPlaylistsByUserId(host.getId()));
+            return Optional.of(host);
         }
         return Optional.empty();
     }
