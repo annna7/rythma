@@ -30,7 +30,6 @@ public class Artist extends User implements Observable {
 
     public void addAlbum(Album album) {
         albums.add(album);
-        notifyObservers(new Notification(NotificationTypeEnum.NEW_SONG_RELEASE, "New album added by " + this.getUsername() + ": " + album.getName()));
     }
 
     public void removeAlbum(Album album) {

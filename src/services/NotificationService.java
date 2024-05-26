@@ -1,15 +1,23 @@
 package services;
 
+import enums.NotificationTypeEnum;
 import exceptions.IllegalOperationException;
-import exceptions.UnauthorizedAccessException;
+import models.Notification;
+import models.Subscription;
 import models.audio.collections.Playlist;
-import models.users.Artist;
-import models.users.Host;
 import models.users.User;
+import repositories.notifications.NotificationRepository;
+import repositories.notifications.*;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public class NotificationService {
     private static NotificationService instance;
-    private NotificationService() {}
+    private final NotificationRepository notificationRepository = new NotificationRepository();
+    private final SubscriptionRepository subscriptionRepository = new SubscriptionRepository();
+
+    NotificationService() {}
 
     public static synchronized NotificationService getInstance() {
         if (instance == null) {
@@ -18,53 +26,69 @@ public class NotificationService {
         return instance;
     }
 
+    public void subscribeOrUnsubscribe(int userId, int entityId, String entityType) {
+        // check if already subscribed
+        boolean isSubscribed = subscriptionRepository.checkSubscription(userId, entityId, entityType);
+        if (isSubscribed) {
+            subscriptionRepository.removeSubscription(userId, entityId, entityType);
+        } else {
+            subscriptionRepository.addSubscription(userId, entityId, entityType);
+        }
+    }
+
     public void subscribeOrUnsubscribeFromArtist(int artistId) {
         User currentUser = UserService.getInstance().getCurrentUser();
-        Artist artist = UserService.getInstance().getArtistById(artistId);
-        if (currentUser.getSubscriptions().contains(artist)) {
-            currentUser.unsubscribe(artist);
-        } else {
-            currentUser.subscribe(artist);
-        }
+        subscribeOrUnsubscribe(currentUser.getId(), artistId, "ARTIST");
     }
 
     public void subscribeOrUnsubscribeFromHost(int hostId) {
         User currentUser = UserService.getInstance().getCurrentUser();
-        Host host = UserService.getInstance().getHostById(hostId);
-        if (currentUser.getSubscriptions().contains(host)) {
-            currentUser.unsubscribe(host);
-        } else {
-            currentUser.subscribe(host);
-        }
+        subscribeOrUnsubscribe(currentUser.getId(), hostId, "HOST");
     }
 
     public void subscribeOrUnsubscribeFromPlaylist(int playlistId) {
         User currentUser = UserService.getInstance().getCurrentUser();
         Playlist playlist = PlaylistService.getInstance().getPlaylist(playlistId);
-        if (currentUser.getSubscriptions().contains(playlist)) {
-            currentUser.unsubscribe(playlist);
-        } else {
-            if (!playlist.isPublic()) {
-                throw new IllegalOperationException("You cannot subscribe to a private playlist");
-            } else if (playlist.getOwnerId() == currentUser.getId()) {
-                throw new IllegalOperationException("You cannot subscribe to your own playlist");
+        if (!playlist.isPublic() && playlist.getOwnerId() != currentUser.getId()) {
+            throw new IllegalOperationException("Cannot subscribe to private or own playlist.");
+        }
+        subscribeOrUnsubscribe(currentUser.getId(), playlistId, "PLAYLIST");
+    }
+
+    public void notifySubscribers(int entityId, String entityType, NotificationTypeEnum notificationType, String message) {
+        try {
+            List<Subscription> subs = subscriptionRepository.findSubscribersByEntity(entityId, entityType);
+            for (Subscription sub : subs) {
+                notificationRepository.createNotification(sub.getSubscriptionId(), message, notificationType);
             }
-            currentUser.subscribe(playlist);
+        } catch (SQLException e) {
+            System.out.println("Error notifying subscribers: " + e.getMessage());
         }
     }
 
-    public void viewNotifications() {
-        User currentUser = UserService.getInstance().getCurrentUser();
-        currentUser.getNotifications().forEach(notification -> {
-            if (!notification.isRead()) {
-                notification.setRead(true);
-            }
-            System.out.println(notification);
-        });
+    public void viewNotifications(int userId) {
+        try {
+            var notifications = notificationRepository.getNotificationsByUserId(userId);
+            notifications.forEach(notification -> {
+                if (!notification.isRead()) {
+                    try {
+                        notificationRepository.markNotificationAsRead(notification.getId());
+                    } catch (SQLException e) {
+                        System.out.println("SQLException: " + e.getMessage());
+                    }
+                    System.out.println(notification);
+                }
+            });
+        } catch (Exception e) {
+            System.out.println("Error viewing notifications: " + e.getMessage());
+        }
     }
 
-    public void clearNotifications() {
-        User currentUser = UserService.getInstance().getCurrentUser();
-        currentUser.getNotifications().clear();
+    public void clearNotifications(int userId) {
+        try {
+            notificationRepository.clearNotifications(userId);
+        } catch (Exception e) {
+            System.out.println("Error clearing notifications: " + e.getMessage());
+        }
     }
 }

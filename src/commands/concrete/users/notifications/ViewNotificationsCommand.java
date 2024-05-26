@@ -3,6 +3,7 @@ package commands.concrete.users.notifications;
 import commands.Command;
 import models.users.User;
 import services.NotificationService;
+import services.UserService;
 
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -10,7 +11,7 @@ import java.util.function.Predicate;
 public class ViewNotificationsCommand implements Command {
     @Override
     public void execute() {
-        NotificationService.getInstance().viewNotifications();
+        NotificationService.getInstance().viewNotifications(UserService.getInstance().getCurrentUser().getId());
     }
 
     @Override

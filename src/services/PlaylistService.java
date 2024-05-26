@@ -1,5 +1,6 @@
 package services;
 
+import enums.NotificationTypeEnum;
 import exceptions.IllegalOperationException;
 import exceptions.NotFoundException;
 import models.audio.collections.Playlist;
@@ -9,13 +10,13 @@ import repositories.audio.collections.PlaylistRepository;
 
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class PlaylistService {
     private static PlaylistService instance = null;
     private final List<Playlist> playlists = new ArrayList<>();
     private PlaylistService() {}
     private final PlaylistRepository playlistRepository = new PlaylistRepository();
+    private final NotificationService notificationService = new NotificationService();
 
     public static synchronized PlaylistService getInstance() {
         if (instance == null) {
@@ -44,6 +45,12 @@ public class PlaylistService {
             System.out.printf("SQL error: %s", e.getMessage());
         }
         playlist.addItem(song);
+        User currentUser = UserService.getInstance().getCurrentUser();
+        currentUser.removePlaylist(playlist);
+        currentUser.addPlaylist(playlist);
+
+        String message = String.format("The song %s has just been added to the playlist %d", song.getTitle(), playlistId);
+        notificationService.notifySubscribers(playlistId, "PLAYLIST", NotificationTypeEnum.NEW_SONG_ADDED_TO_PLAYLIST, message);
     }
 
     public void removePlaylist(int playlistId) {

@@ -47,7 +47,6 @@ public class Playlist extends AudioCollection<Song> implements Observable {
     @Override
     public void addItem(Song item) {
         super.addItem(item);
-        notifyObservers(new Notification(NotificationTypeEnum.NEW_SONG_ADDED_TO_PLAYLIST, "New song added to playlist " + this.getName() + ": " + item.getTitle()));
     }
 
     @Override

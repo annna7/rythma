@@ -28,7 +28,6 @@ public class Host extends User implements Observable {
 
     public void addPodcast(Podcast podcast) {
         podcasts.add(podcast);
-        notifyObservers(new Notification(NotificationTypeEnum.NEW_EPISODE,"New podcast added by " + this.getUsername() + ": " + podcast.getName()));
     }
 
     public void removePodcast(Podcast podcast) {

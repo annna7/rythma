@@ -65,10 +65,8 @@ public class User implements Observer {
     }
 
     public void removePlaylist(Playlist playlist) {
-        if (!playlists.contains(playlist)) {
-            throw new NotFoundException("Playlist");
-        }
-        playlists.remove(playlist);
+        Optional<Playlist> playlistInUser = playlists.stream().filter(item -> playlist.getId() == item.getId()).findFirst();
+        playlistInUser.ifPresent(playlists::remove);
     }
 
     @Override
