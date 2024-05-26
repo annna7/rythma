@@ -20,7 +20,7 @@ public class PlaylistRepository implements IRepository<Playlist> {
             "JOIN Playlist p ON ac.CollectionID = p.PlaylistID " +
             "LEFT JOIN PlaylistSongs ps ON p.PlaylistID = ps.PlaylistID " +
             "LEFT JOIN PlayableItem s ON ps.SongID = s.ItemID" +
-            " JOIN Song ss ON s.ItemID = ss.Genres ;";
+            " JOIN Song ss ON s.ItemID = ss.SongID ;";
 
     private static final String GET_PLAYLIST_BY_ID = "SELECT ac.CollectionID, ac.Name, ac.OwnerID, p.Description, p.IsPublic, " +
             "s.ItemID, s.Title, s.Length, s.ReleaseDate, ss.Genres " +
