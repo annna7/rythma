@@ -4,6 +4,7 @@ import database.DatabaseConnector;
 import models.users.Artist;
 import repositories.IRepository;
 import repositories.audio.collections.AlbumRepository;
+import repositories.audio.collections.PlaylistRepository;
 import utils.JsonUtils;
 
 import java.sql.*;
@@ -24,6 +25,7 @@ public class ArtistRepository implements IRepository<Artist> {
     private static final String UPDATE_ARTIST = "UPDATE User JOIN Artist ON User.UserID = Artist.ArtistID SET Username = ?, Password = ?, FirstName = ?, LastName = ?, Biography = ?, SocialMedia = ? WHERE ArtistID = ?";
 
     private final AlbumRepository albumRepository = new AlbumRepository();
+    private final PlaylistRepository playlistRepository = new PlaylistRepository();
 
     public static Connection getDbConnection() {
         return DatabaseConnector.connect();
@@ -57,6 +59,7 @@ public class ArtistRepository implements IRepository<Artist> {
         }
         if (artist != null) {
             artist.getAlbums().addAll(albumRepository.findAlbumsByArtistId(artistId));
+            artist.getPlaylists().addAll(playlistRepository.findAllPlaylistsByUserId(artist.getId()));
             return Optional.of(artist);
         } else {
             return Optional.empty();

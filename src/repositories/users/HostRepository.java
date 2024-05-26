@@ -6,6 +6,7 @@ import models.audio.collections.Podcast;
 import models.audio.items.Episode;
 
 import repositories.IRepository;
+import repositories.audio.collections.PlaylistRepository;
 import repositories.audio.collections.PodcastRepository;
 import utils.JsonUtils;
 
@@ -24,6 +25,7 @@ public class HostRepository implements IRepository<Host> {
     private static final String DELETE_HOST = "DELETE FROM User WHERE UserID = ?";  // Cascade delete should handle Host table
 
     private final PodcastRepository podcastRepository = new PodcastRepository();
+    private final PlaylistRepository playlistRepository = new PlaylistRepository();
 
     public static Connection getDbConnection() {
         return DatabaseConnector.connect();
@@ -52,6 +54,7 @@ public class HostRepository implements IRepository<Host> {
             if (rs.next()) {
                 Host host = new Host(rs.getInt("UserID"), rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Affiliation"));
                 host.getPodcasts().addAll(podcastRepository.findPodcastsByHostId(host.getId()));
+                host.getPlaylists().addAll(playlistRepository.findAllPlaylistsByUserId(host.getId()));
                 return Optional.of(host);
             }
         }

@@ -59,6 +59,33 @@ public class SearchUtils {
         return matchedItems;
     }
 
+    public static <T> List<T> searchInListAttribute(List<T> items, String attributeName, String searchValue) {
+        List<T> matchedItems = new ArrayList<>();
+        String lowerCaseSearchValue = searchValue.toLowerCase();
+
+        try {
+            for (T item : items) {
+                Field field = item.getClass().getDeclaredField(attributeName);
+                field.setAccessible(true);
+                Object fieldValue = field.get(item);
+
+                if (fieldValue instanceof List) {
+                    List<?> fieldList = (List<?>) fieldValue;
+                    for (Object fieldItem : fieldList) {
+                        if (fieldItem.toString().toLowerCase().contains(lowerCaseSearchValue)) {
+                            matchedItems.add(item);
+                            break;
+                        }
+                    }
+                }
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            System.err.println("Reflection error when accessing attribute: " + e.getMessage());
+        }
+
+        return matchedItems;
+    }
+
     public static <T> List<T> searchByAttributeUsingFunction(List<T> items, Function<T, String> function, String attributeValue) {
         List<T> matchedItems = new ArrayList<>();
         for (T item : items) {

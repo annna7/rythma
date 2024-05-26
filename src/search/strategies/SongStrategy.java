@@ -22,7 +22,7 @@ public class SongStrategy implements SearchStrategy<Song> {
                     MusicService.getInstance().getArtistNameBySong(song), query.get("artist"));
         }
         if (query.containsKey("genre")) {
-            songs = SearchUtils.searchInSetAttribute(songs, "genres", query.get("genre"));
+            songs = SearchUtils.searchInListAttribute(songs, "genres", query.get("genre"));
         }
         if (query.containsKey("album")) {
             songs = SearchUtils.searchByAttributeUsingFunction(songs, song ->
