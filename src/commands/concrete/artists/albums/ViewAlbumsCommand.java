@@ -1,10 +1,13 @@
 package commands.concrete.artists.albums;
 
 import commands.Command;
+import models.audio.collections.Album;
 import models.users.Artist;
 import models.users.User;
+import search.strategies.AlbumStrategy;
 import services.MusicService;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 import static utils.OutputUtils.showCollectionMessage;
@@ -12,7 +15,8 @@ import static utils.OutputUtils.showCollectionMessage;
 public class ViewAlbumsCommand implements Command {
     @Override
     public void execute() {
-        showCollectionMessage("albums", MusicService.getInstance().getCurrentAlbums());
+        List<Album> albumList = MusicService.getInstance().getCurrentAlbums();
+        showCollectionMessage("albums", albumList);
     }
 
     @Override

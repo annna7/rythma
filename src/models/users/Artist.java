@@ -23,6 +23,11 @@ public class Artist extends User implements Observable {
         this.biography = biography;
     }
 
+    public Artist(int id, String username, String firstName, String lastName, String password, String biography) {
+        this(username, firstName, lastName, password, biography);
+        this.id = id;
+    }
+
     public void addAlbum(Album album) {
         albums.add(album);
         notifyObservers(new Notification(NotificationTypeEnum.NEW_SONG_RELEASE, "New album added by " + this.getUsername() + ": " + album.getName()));

@@ -1,7 +1,8 @@
-package repositories;
+package repositories.users;
 
 import database.DatabaseConnector;
 import models.users.User;
+import repositories.IRepository;
 
 import java.util.Optional;
 import java.sql.*;
@@ -23,7 +24,7 @@ public class UserRepository implements IRepository<User> {
              PreparedStatement stmt = conn.prepareStatement(GET_ALL_USERS);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                users.add(new User(rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("password")));
+                users.add(new User(rs.getInt("UserID"), rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("password")));
             }
             return users;
         }
@@ -35,7 +36,7 @@ public class UserRepository implements IRepository<User> {
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return Optional.of(new User(rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("password")));
+                return Optional.of(new User(rs.getInt("UserID"), rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("password")));
             }
             return Optional.empty();
         }
@@ -47,24 +48,34 @@ public class UserRepository implements IRepository<User> {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return Optional.of(new User(rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("password")));
+                return Optional.of(new User(rs.getInt("UserID"), rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("password")));
             }
             return Optional.empty();
         }
     }
 
-    @Override
     public boolean create(User user) throws SQLException {
         try (Connection conn = DatabaseConnector.connect();
-             PreparedStatement stmt = conn.prepareStatement(INSERT_USER)) {
+             PreparedStatement stmt = conn.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getFirstName());
             stmt.setString(4, user.getLastName());
-            return stmt.executeUpdate() > 0;
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows == 0) {
+                return false;
+            }
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    user.setId(generatedKeys.getInt(1));  // Set the ID back on the user object
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         }
     }
-
     @Override
     public boolean update(User user) throws SQLException {
         try (Connection conn = DatabaseConnector.connect();

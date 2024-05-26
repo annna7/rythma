@@ -1,7 +1,8 @@
-package repositories;
+package repositories.users;
 
 import database.DatabaseConnector;
 import models.users.Host;
+import repositories.IRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class HostRepository implements IRepository<Host> {
             stmt.setInt(1, hostId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return Optional.of(new Host(rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Affiliation")));
+                return Optional.of(new Host(rs.getInt("UserID"), rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Affiliation")));
             }
         }
         return Optional.empty();
@@ -62,6 +63,7 @@ public class HostRepository implements IRepository<Host> {
 
             try (ResultSet generatedKeys = stmtUser.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
+                    host.setId(generatedKeys.getInt(1));
                     stmtHost.setString(1, host.getAffiliation());
                     stmtHost.executeUpdate();
                     conn.commit();

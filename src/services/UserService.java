@@ -8,9 +8,9 @@ import exceptions.NotFoundException;
 import models.users.Artist;
 import models.users.Host;
 import models.users.User;
-import repositories.ArtistRepository;
-import repositories.HostRepository;
-import repositories.UserRepository;
+import repositories.users.ArtistRepository;
+import repositories.users.HostRepository;
+import repositories.users.UserRepository;
 import utils.RoleValidator;
 
 import java.sql.SQLException;
@@ -38,20 +38,31 @@ public class UserService {
         return currentUser != null;
     }
 
-    public void login(String username, String password) throws BadLoginAttemptException {
+    public void login(String username, String password, UserRoleEnum role) throws BadLoginAttemptException {
         try {
             User user = this.getUserByUsername(username);
             if (user.getPassword().equals(password)) {
-                setCurrentUser(user);
+                switch (role) {
+                    case ARTIST:
+                        setCurrentUser(getArtistById(user.getId()));
+                        break;
+                    case HOST:
+                        setCurrentUser(getHostById(user.getId()));
+                        break;
+                    default:
+                        setCurrentUser(user);
+                }
             } else {
                 throw new BadLoginAttemptException();
             }
         } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
             throw new BadLoginAttemptException();
         }
     }
 
-    public void register(User user) {
+    public void register(User user, UserRoleEnum role) {
         try {
             User existingUser = this.getUserByUsername(user.getUsername());
             throw new ExistingUsernameException(existingUser.getUsername());
@@ -60,7 +71,16 @@ public class UserService {
             // and create it in the database
             users.add(user);
             try {
-                userRepository.create(user);
+                switch (role) {
+                    case ARTIST:
+                        artistRepository.create((Artist) user);
+                        break;
+                    case HOST:
+                        hostRepository.create((Host) user);
+                        break;
+                    default:
+                        userRepository.create(user);
+                }
             } catch (SQLException sqlException) {
                 System.out.printf("SQL error: %s%n", sqlException.getMessage());
             }

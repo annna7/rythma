@@ -8,5 +8,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="mysql-connector-java-8.4.0" level="project" />
+    <orderEntry type="library" name="jackson-databind-2.11.1" level="project" />
+    <orderEntry type="library" name="jackson-core-2.11.4" level="project" />
+    <orderEntry type="library" name="jackson-annotations-2.14.0" level="project" />
   </component>
 </module>

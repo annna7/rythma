@@ -1,7 +1,9 @@
-package repositories;
+package repositories.users;
 
 import database.DatabaseConnector;
 import models.users.Artist;
+import repositories.IRepository;
+import repositories.audio.collections.AlbumRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,6 +19,8 @@ public class ArtistRepository implements IRepository<Artist> {
     private static final String UPDATE_ARTIST = "UPDATE User JOIN Artist ON User.UserID = Artist.ArtistID SET Username = ?, Password = ?, FirstName = ?, LastName = ?, Biography = ? WHERE ArtistID = ?";
     private static final String DELETE_ARTIST = "DELETE FROM User WHERE UserID = ?";  // Cascade delete should handle Artist table
 
+    private final AlbumRepository albumRepository = new AlbumRepository();
+
     public static Connection getDbConnection() {
         return DatabaseConnector.connect();
     }
@@ -27,7 +31,9 @@ public class ArtistRepository implements IRepository<Artist> {
              PreparedStatement stmt = conn.prepareStatement(GET_ALL_ARTISTS);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                artists.add(new Artist(rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Biography")));
+                Artist artist = new Artist(rs.getInt("UserID"), rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Biography"));
+                artist.getAlbums().addAll(albumRepository.findAlbumsByArtistId(artist.getId()));
+                artists.add(artist);
             }
         }
         return artists;
@@ -39,7 +45,9 @@ public class ArtistRepository implements IRepository<Artist> {
             stmt.setInt(1, artistId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return Optional.of(new Artist(rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Biography")));
+                Artist artist = new Artist(rs.getInt("UserID"), rs.getString("Username"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Password"), rs.getString("Biography"));
+                artist.getAlbums().addAll(albumRepository.findAlbumsByArtistId(artistId));
+                return Optional.of(artist);
             }
         }
         return Optional.empty();
@@ -62,6 +70,7 @@ public class ArtistRepository implements IRepository<Artist> {
 
             try (ResultSet generatedKeys = stmtUser.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
+                    artist.setId(generatedKeys.getInt(1));
                     stmtArtist.setString(1, artist.getBiography());
                     stmtArtist.executeUpdate();
                     conn.commit();

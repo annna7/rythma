@@ -18,6 +18,7 @@ public class CommandInvoker {
             System.out.println("Unauthorized access: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
         }
 
         auditService.logAction(command.getCommandName());

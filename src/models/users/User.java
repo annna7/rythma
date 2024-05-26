@@ -9,8 +9,7 @@ import observable.Observable;
 import java.util.*;
 
 public class User implements Observer {
-    private static int idCounter = 0;
-    private final int id = idCounter++;
+    protected int id;
     protected final String displayName;
     protected final String username;
     protected final String firstName;
@@ -29,9 +28,16 @@ public class User implements Observer {
         this.displayName = firstName + " " + lastName;
     }
 
+    public User(int id, String username, String firstName, String lastName, String password) {
+        this(username, firstName, lastName, password);
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
+
+    public void setId(int id) {}
 
     public String getUsername() {
         return username;
@@ -67,11 +73,11 @@ public class User implements Observer {
 
     @Override
     public String toString() {
-        return String.format("User [ID: %d, Username: '%s', Name: '%s', Playlists: %d]",
+        return String.format("User [ID: %d, Username: '%s', Playlists: '%d', Name: '%s']",
                 getId(),
                 getUsername(),
-                getDisplayName(),
-                playlists.size()
+                playlists.size(),
+                getDisplayName()
         );
     }
 

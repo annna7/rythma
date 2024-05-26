@@ -28,7 +28,7 @@ public class PlaylistService {
     }
 
     public void addSongToPlaylist(int songId, int playlistId) {
-        Song song = MusicService.getInstance().getSong(songId);
+        Song song = MusicService.getInstance().getSongById(songId);
         Playlist playlist = getPlaylist(playlistId);
         playlist.addItem(song);
     }
@@ -41,7 +41,7 @@ public class PlaylistService {
     }
 
     public void removeSongFromPlaylist(int songId, int playlistId) {
-        Song song = MusicService.getInstance().getSong(songId);
+        Song song = MusicService.getInstance().getSongById(songId);
         Playlist playlist = getPlaylist(playlistId);
         playlist.removeItem(song);
     }

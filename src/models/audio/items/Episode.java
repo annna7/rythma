@@ -14,6 +14,12 @@ public class Episode extends PlayableItem {
         this.showNotes = showNotes;
     }
 
+    public Episode(int id, String title, int length, LocalDate release, int hostId, int episodeNumber, String showNotes, List<String> guests) {
+        this(title, length, release, hostId, episodeNumber, showNotes);
+        this.id = id;
+        this.guests.addAll(guests);
+    }
+
     public void addGuest(String guest) {
         guests.add(guest);
     }

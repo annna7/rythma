@@ -19,6 +19,13 @@ public class Host extends User implements Observable {
         this.affiliation = affiliation;
     }
 
+
+    public Host(int id, String username, String firstName, String lastName, String password, String affiliation) {
+        this(username, firstName, lastName, password, affiliation);
+        this.id = id;
+    }
+
+
     public void addPodcast(Podcast podcast) {
         podcasts.add(podcast);
         notifyObservers(new Notification(NotificationTypeEnum.NEW_EPISODE,"New podcast added by " + this.getUsername() + ": " + podcast.getName()));

@@ -29,9 +29,7 @@ public class RegisterCommand implements Command {
         String additionalInfo = role == ARTIST ? askForField("biography") :
                                 role == HOST ? askForField("affiliation") : null;
         User newUser = UserFactory.createUser(role, username, firstName, lastName, password, additionalInfo);
-        UserService.getInstance().register(newUser);
-        // AuditService.getInstance().log("User registered: " + newUser);
-        // DatabaseService.getInstance().saveUser(newUser);
+        UserService.getInstance().register(newUser, role);
     }
 
     @Override

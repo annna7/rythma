@@ -10,6 +10,12 @@ public class Song extends PlayableItem {
         super(title, length, release, albumId);
     }
 
+    public Song(int id, String title, int length, int albumId, LocalDate release, List<String> genres) {
+        this(title, length, albumId, release);
+        this.id = id;
+        this.genres.addAll(genres);
+    }
+
     public void addGenre(String genre) {
         genres.add(genre);
     }

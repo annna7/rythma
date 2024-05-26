@@ -2,6 +2,8 @@ package models.audio.collections;
 
 import models.audio.items.Song;
 
+import java.util.List;
+
 import static utils.OutputUtils.getCollectionMessageWithCommas;
 
 public class Album extends AudioCollection<Song> {
@@ -11,13 +13,23 @@ public class Album extends AudioCollection<Song> {
         this.label = label;
     }
 
+    public Album(int id, String name, String label, int ownerId) {
+        super(id, ownerId, name);
+        this.label = label;
+    }
+
+    public Album(int id, String name, String label, int ownerId, List<Song> songs) {
+        this(id, name, label, ownerId);
+        this.items = songs;
+    }
+
     public String getLabel() {
         return label;
     }
 
     @Override
     public String toString() {
-        return String.format("Album: %s (Label: %s)\nSongs: %s",
-                name, label, getCollectionMessageWithCommas("songs", items));
+        return String.format("Album: %d %s (Label: %s)\nSongs: %s",
+                id, name, label, getCollectionMessageWithCommas("songs", items));
     }
 }
