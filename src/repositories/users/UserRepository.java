@@ -3,6 +3,7 @@ package repositories.users;
 import database.DatabaseConnector;
 import models.users.User;
 import repositories.IRepository;
+import repositories.audio.collections.PlaylistRepository;
 
 import java.util.Optional;
 import java.sql.*;
@@ -17,6 +18,12 @@ public class UserRepository implements IRepository<User> {
     private static final String UPDATE_USER = "UPDATE User SET username = ?, password = ?, firstName = ?, lastName = ? WHERE id = ?";
     private static final String DELETE_USER = "DELETE FROM User WHERE id = ?";
 
+    private static final PlaylistRepository playlistRepository = new PlaylistRepository();
+
+    public void addPlaylistsToUser(User user) throws SQLException {
+        user.getPlaylists().addAll(playlistRepository.findAllPlaylistsByUserId(user.getId()));
+    }
+
     @Override
     public List<User> findAll() throws SQLException {
         List<User> users = new ArrayList<>();
@@ -24,35 +31,51 @@ public class UserRepository implements IRepository<User> {
              PreparedStatement stmt = conn.prepareStatement(GET_ALL_USERS);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                users.add(new User(rs.getInt("UserID"), rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("password")));
+                User user = new User(rs.getInt("UserID"), rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("password"));
+                addPlaylistsToUser(user);
+                users.add(user);
             }
             return users;
         }
     }
 
     public Optional<User> findById(int userId) throws SQLException {
+        User user = null;
         try (Connection conn = DatabaseConnector.connect();
              PreparedStatement stmt = conn.prepareStatement(GET_USER_BY_ID)) {
             stmt.setInt(1, userId);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return Optional.of(new User(rs.getInt("UserID"), rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("password")));
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    user = new User(rs.getInt("UserID"), rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("password"));
+                }
             }
-            return Optional.empty();
         }
+        if (user != null) {
+            addPlaylistsToUser(user);
+            return Optional.of(user);
+        }
+        return Optional.empty();
     }
 
     public Optional<User> findByUsername(String username) throws SQLException {
+        User user = null;
         try (Connection conn = DatabaseConnector.connect();
              PreparedStatement stmt = conn.prepareStatement(GET_USER_BY_USERNAME)) {
             stmt.setString(1, username);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return Optional.of(new User(rs.getInt("UserID"), rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("password")));
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    user = new User(rs.getInt("UserID"), rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("password"));
+                }
             }
-            return Optional.empty();
         }
+
+        if (user != null) {
+            addPlaylistsToUser(user);
+            return Optional.of(user);
+        }
+        return Optional.empty();
     }
+
 
     public boolean create(User user) throws SQLException {
         try (Connection conn = DatabaseConnector.connect();

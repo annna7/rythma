@@ -79,11 +79,9 @@ CREATE TABLE Episode
 CREATE TABLE Playlist
 (
     PlaylistID INT AUTO_INCREMENT PRIMARY KEY,
-    OwnerID INT NOT NULL,
-    Name VARCHAR(255) NOT NULL,
     Description TEXT,
     IsPublic BOOLEAN NOT NULL DEFAULT FALSE,
-    FOREIGN KEY (OwnerID) REFERENCES User (UserID)
+    FOREIGN KEY (PlaylistID) REFERENCES AudioCollection (CollectionID)
         ON DELETE CASCADE
 );
 

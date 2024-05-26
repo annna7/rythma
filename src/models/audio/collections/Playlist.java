@@ -25,6 +25,12 @@ public class Playlist extends AudioCollection<Song> implements Observable {
         this(name, description, Boolean.parseBoolean(isPublicValue));
     }
 
+    public Playlist(int id, String name, String description, boolean isPublic, int ownerId) {
+        super(id, ownerId, name);
+        this.description = description;
+        this.isPublic = isPublic;
+    }
+
 
     public String getDescription() {
         return description;
