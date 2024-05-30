@@ -1,6 +1,6 @@
 package models;
 
-public class Subscription {
+public final class Subscription {
     private int subscriptionId;
     private int userId;
     private int entityId;
@@ -29,7 +29,6 @@ public class Subscription {
         return entityType;
     }
 
-    // Setters
     public void setSubscriptionId(int subscriptionId) {
         this.subscriptionId = subscriptionId;
     }

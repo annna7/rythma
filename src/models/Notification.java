@@ -19,11 +19,12 @@ public class Notification implements Comparable<Notification> {
         this.isRead = false;
     }
 
+    @Override
     public int compareTo(Notification other) {
         if (this.isRead != other.isRead) {
             return this.isRead ? 1 : -1;
         }
-        return this.timestamp.compareTo(other.timestamp);
+        return this.message.compareTo(other.message);
     }
 
     public int getId () {

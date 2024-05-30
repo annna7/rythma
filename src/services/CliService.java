@@ -38,8 +38,6 @@ public class CliService {
         commands.add(new RemoveEpisodeFromPodcastCommand());
         commands.add(new RemovePodcastCommand());
         commands.add(new UpdateAffiliationCommand());
-        commands.add(new FollowUnfollowArtistCommand());
-        commands.add(new FollowUnfollowHostCommand());
         commands.add(new FollowUnfollowPlaylistCommand());
         commands.add(new ViewNotificationsCommand());
         commands.add(new ClearNotificationsCommand());
@@ -90,17 +88,23 @@ public class CliService {
     public void run() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            showMainMenu();
-            int option = scanner.nextInt();
-            Command selectedCommand = selectCommand(option);
-            if (selectedCommand == null) {
-                System.out.println("Invalid option. Please try again.");
-            } else {
-                commandInvoker.executeCommand(selectedCommand);
-                if (selectedCommand instanceof ExitCommand) {
-                    System.out.println("Thank you for using Rythma!");
-                    break;
+            try {
+                showMainMenu();
+                int option = scanner.nextInt();
+                Command selectedCommand = selectCommand(option);
+                if (selectedCommand == null) {
+                    System.out.println("Invalid option. Please try again.");
+                } else {
+                    commandInvoker.executeCommand(selectedCommand);
+                    if (selectedCommand instanceof ExitCommand) {
+                        System.out.println("Thank you for using Rythma!");
+                        break;
+                    }
                 }
+            } catch (Exception e) {
+                System.out.println("Something went wrong!");
+                System.out.println("Please try again.");
+                scanner.nextLine();
             }
         }
     }

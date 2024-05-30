@@ -68,7 +68,8 @@ public class NotificationService {
 
     public void viewNotifications(int userId) {
         try {
-            var notifications = notificationRepository.getNotificationsByUserId(userId);
+            List<Notification> notifications = notificationRepository.getNotificationsByUserId(userId);
+            notifications.sort(Notification::compareTo);
             notifications.forEach(notification -> {
                 if (!notification.isRead()) {
                     try {

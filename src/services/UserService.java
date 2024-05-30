@@ -144,7 +144,7 @@ public class UserService {
             System.out.println("SQL Error: " + e.getMessage());
         }
 
-        throw new NotFoundException("User with username " + username + " not found");
+        throw new NotFoundException("User with username " + username);
     }
 
 
@@ -166,7 +166,7 @@ public class UserService {
         } catch (SQLException e) {
             System.out.println("SQL Error: " + e.getMessage());
         }
-        throw new NotFoundException("Artist with id " + artistId + " not found due to SQL error");
+        throw new NotFoundException("Artist with id " + artistId);
     }
 
     public Host getHostById(int hostId) throws NotFoundException {
